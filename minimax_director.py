@@ -436,6 +436,12 @@ class MiniMaxH3Director(io.ComfyNode):
                                         "still drives media, keyframes, canvas and length; only the text "
                                         "is overridden. Its <Picture N> labels must match the reference "
                                         "order the Director actually sends."),
+                io.Boolean.Input("enhance", default=False, optional=True,
+                                 tooltip="Pass the compiled storyboard prompt through the QwenVL GGUF "
+                                         "enhancer before encoding — one pass on the whole prompt."),
+                io.String.Input("enhancer_model", default="", optional=True,
+                                tooltip="GGUF file name in the LLM model paths for the enhancer. "
+                                        "Blank = the only GGUF found."),
             ],
             outputs=[
                 io.Model.Output(display_name="model"),
@@ -493,7 +499,7 @@ class MiniMaxH3Director(io.ComfyNode):
                 override_audio=False, ref_image_size="match",
                 shift_video=12.0, shift_audio=3.0, ref_images=None, ref_image_notes="",
                 start=None, end=None, duration=None,
-                width=None, height=None, prepend_text="", external_prompt="") -> io.NodeOutput:
+                width=None, height=None, prepend_text="", external_prompt="", enhance=False, enhancer_model="") -> io.NodeOutput:
 
         mm = core()
         tdata = plan.parse_timeline(timeline_data)
@@ -675,6 +681,20 @@ class MiniMaxH3Director(io.ComfyNode):
         if prompt != p["prompt"]:
             log.info("[MiniMaxDirector] external prompt override (%d chars) replaces the "
                      "compiled storyboard prompt", len(prompt))
+
+        if enhance:
+            try:
+                system = ("You polish the wording of a structured MiniMax-H3 storyboard prompt. "
+                          "Keep its structure EXACTLY: every section label, every [Shot N] marker, "
+                          "every timestamp, every <Picture N> reference and every quoted dialogue "
+                          "line verbatim. Improve only the prose: clearer actions, concrete visible "
+                          "details, natural camera language. Fluent English, no markdown.")
+                enhanced = media._qwenvl_generate([], prompt, system, enhancer_model, 2048)
+                if enhanced and enhanced.strip():
+                    prompt = enhanced.strip()
+                    log.info("[MiniMaxDirector] prompt enhanced via QwenVL (%d chars)", len(prompt))
+            except Exception as exc:
+                log.warning("[MiniMaxDirector] prompt enhance failed, using raw prompt: %s", exc)
         log.info("[MiniMaxDirector] %s%s | %dx%d | %d frames (%.2fs @24fps) | %d shots | "
                  "refs: %d img / %d vid / %d audio",
                  p["mode"], " (retake)" if retake else "", width, height, length,
