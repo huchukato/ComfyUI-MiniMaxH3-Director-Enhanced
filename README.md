@@ -6,8 +6,8 @@ press Run. Instead of one prompt box for a whole clip you get a storyboard — a
 see the exact prompt the model will receive while you are still editing it.
 
 [![license](https://img.shields.io/badge/license-GPL--3.0-blue)](LICENSE)
-[![ComfyUI](https://img.shields.io/badge/ComfyUI-%E2%89%A5%200.30.0-1a1a1a)](https://github.com/comfyanonymous/ComfyUI)
-[![version](https://img.shields.io/badge/version-0.3.9-brightgreen)](CHANGELOG.md)
+[![ComfyUI](https://img.shields.io/badge/ComfyUI-%E2%89%A5%200.37.0-1a1a1a)](https://github.com/comfyanonymous/ComfyUI)
+[![version](https://img.shields.io/badge/version-1.1.0-brightgreen)](CHANGELOG.md)
 [![Registry](https://img.shields.io/badge/ComfyUI_Registry-install_from_Manager-8A2BE2)](https://registry.comfy.org/publishers/huchukato/nodes/minimaxh3-director-enhanced)
 [![stars](https://img.shields.io/github/stars/huchukato/ComfyUI-MiniMaxH3-Director-Enhanced?style=social)](https://github.com/huchukato/ComfyUI-MiniMaxH3-Director-Enhanced/stargazers)
 
