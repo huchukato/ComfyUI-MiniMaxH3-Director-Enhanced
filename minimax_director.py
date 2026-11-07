@@ -684,11 +684,18 @@ class MiniMaxH3Director(io.ComfyNode):
         if enhance:
             try:
                 system = ("You polish the wording of a structured MiniMax-H3 storyboard prompt. "
-                          "Keep its structure EXACTLY: every section label, every [Shot N] marker, "
-                          "every timestamp, every <Picture N> reference and every quoted dialogue "
-                          "line verbatim. Improve only the prose: clearer actions, concrete visible "
-                          "details, natural camera language. Fluent English, no markdown.")
-                enhanced = media._qwenvl_generate([], prompt, system, enhancer_model, 2048)
+                          "The attached image is the character reference: the <Subject 1> definition "
+                          "MUST describe exactly the person in it (hair, eyes, outfit) — never invent "
+                          "appearance. Keep the structure EXACTLY: every section label, every [Shot N] "
+                          "marker, every timestamp, every <Picture N> reference and every quoted "
+                          "dialogue line verbatim. Improve only the prose: clearer actions, concrete "
+                          "visible details, natural camera language. Fluent English, no markdown.")
+                ref_b64 = []
+                for t in (ref_image_tensors or [])[:3]:
+                    img = Image.fromarray((t[0].clamp(0, 1).mul(255).round().cpu().numpy()).astype("uint8"))
+                    buf = _io.BytesIO(); img.save(buf, format="JPEG", quality=90)
+                    ref_b64.append(base64.b64encode(buf.getvalue()).decode())
+                enhanced = media._qwenvl_generate(ref_b64, prompt, system, enhancer_model, 2048)
                 if enhanced and enhanced.strip():
                     prompt = enhanced.strip()
                     log.info("[MiniMaxDirector] prompt enhanced via QwenVL (%d chars)", len(prompt))
