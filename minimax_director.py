@@ -439,9 +439,8 @@ class MiniMaxH3Director(io.ComfyNode):
                 io.Boolean.Input("enhance", default=False, optional=True,
                                  tooltip="Pass the compiled storyboard prompt through the QwenVL GGUF "
                                          "enhancer before encoding — one pass on the whole prompt."),
-                io.String.Input("enhancer_model", default="", optional=True,
-                                tooltip="GGUF file name in the LLM model paths for the enhancer. "
-                                        "Blank = the only GGUF found."),
+                io.Combo.Input("enhancer_model", options=media._scan_llm_gguf_files() or [""], optional=True,
+                                tooltip="GGUF model for the enhancer (scanned from the LLM model paths)."),
             ],
             outputs=[
                 io.Model.Output(display_name="model"),
