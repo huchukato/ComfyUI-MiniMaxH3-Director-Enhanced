@@ -1,0 +1,19 @@
+{
+  "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16": {"steps": 6, "sampler_name": "res_multistep", "scheduler": "simple",
+    "source": "measured 2026-10-19 (official ref2va model): 4 steps leave a white veil (black level 0.024), 6 steps none (0.002), clean sound; the user's verdict: clean",
+    "still": {"steps": 6, "sampler_name": "res_multistep", "scheduler": "simple",
+              "source": "measured 2026-10-19 on pictures: four references put together as well as 20 steps without LoRA, 42 s instead of 132 s"}},
+  "minimax_h3_turbo_v4_step600_ema": {
+    "still": {"steps": 8, "sampler_name": "res_multistep", "scheduler": "simple",
+              "source": "measured 2026-10-19 on pictures (FL2VA, 3 MP): strength 1.0 and 8 steps 33 s, close to 20 steps without LoRA; the 0.38 / 20 steps of other packs saves no time"}},
+  "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16": {"steps": 8, "sampler_name": "res_multistep", "scheduler": "simple",
+    "source": "measured 2026-10-20 (15 s 720p, text only): 4 steps paint brush-stroke artefacts and the sound of the second part falls silent (-97 dB); 8 steps (the template's) are clean with sound throughout, 980 s instead of 2200 s at 20 steps"},
+  "minimax_h3_fl2v_turbo_4step_v1.2_768p_comfyui_bf16": {"steps": 4, "sampler_name": "res_multistep", "scheduler": "simple",
+    "source": "measured 2026-10-14: 6 steps look the same at 1.4x the time"},
+  "minimax_h3_taomate_3step_lora_avg_rank_19_bf16": {"steps": 3, "sampler_name": "res_multistep", "scheduler": "simple",
+    "source": "measured 2026-10-14 (FL2VA and Ref2VA): 3 steps look like 4"},
+  "minimax_h3_turbo_4step_ckpt500": {"steps": 8, "sampler_name": "euler", "scheduler": "beta",
+    "source": "Civitai page: best at 6-8 steps, Euler + Beta; measured 2026-10-14: 4 steps give green, oversaturated faces"},
+  "minimax_h3_turbo_4step_ckpt500_pruned_comfyui": {"steps": 8, "sampler_name": "euler", "scheduler": "beta",
+    "source": "Civitai page: best at 6-8 steps, Euler + Beta; measured 2026-10-14: 4 steps give green, oversaturated faces"}
+}

@@ -1,15 +1,13 @@
 [project]
 name = "minimaxh3-director-enhanced"
-description = "A timeline editor for MiniMax H3 — storyboard prompts, first/last keyframes, image/video/audio references, native joint audio, live sampling preview, retakes and shot chaining."
-version = "0.3.9"
+description = "Videos of any length with MiniMax H3: shots on a timeline, characters, voices, songs, storyboard and control videos, rendered part by part in ComfyUI's native loop. Nine example workflows and a guide; the Legacy timeline Director is included. Enhanced fork: per-segment and whole-prompt QwenVL enhancement."
+version = "1.1.0"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
-# Nothing beyond what ComfyUI itself already installs.
-dependencies = []
+dependencies = ["opencv-python>=4.8"]
 classifiers = [
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Operating System :: OS Independent",
-    "Environment :: GPU :: NVIDIA CUDA",
 ]
 
 [project.urls]
@@ -22,5 +20,5 @@ PublisherId = "huchukato"
 DisplayName = "MiniMax H3 Director Enhanced"
 Icon = "https://raw.githubusercontent.com/huchukato/ComfyUI-MiniMaxH3-Director-Enhanced/main/icon.png"
 Banner = "https://raw.githubusercontent.com/huchukato/ComfyUI-MiniMaxH3-Director-Enhanced/main/banner.png"
-# comfy_api.latest, the packed AV latent and H3 support all landed in ComfyUI 0.30.0.
-requires-comfyui = ">=0.30.0"
+# NG depends on native List loops; this release is validated against ComfyUI 0.37.0.
+requires-comfyui = ">=0.37.0"

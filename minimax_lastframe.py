@@ -32,7 +32,7 @@ class MiniMaxH3SaveLastFrame(io.ComfyNode):
         return io.Schema(
             node_id="MiniMaxH3SaveLastFrameCS",
             display_name="MiniMax H3 Save Last Frame",
-            category="MiniMax H3",
+            category="MiniMax H3/Legacy",
             description=(
                 "Saves the LAST frame of an image batch as a PNG, whatever the length, and "
                 "passes the whole batch through unchanged. Put it straight after VAEDecode. "

@@ -1,0 +1,23 @@
+import assert from "node:assert/strict";
+import { editHistory } from "../../../js/ng/h3s_history.js";
+
+const before = { shots: "original", seconds: 20 };
+const history = editHistory(before, 3);
+assert.equal(history.canUndo, false);
+assert.equal(history.canRedo, false);
+assert.equal(history.undo(), null);
+history.record({ shots: "trimmed", seconds: 20 });
+history.record({ shots: "trimmed", seconds: 20 });
+assert.deepEqual(history.undo(), before, "identical plan/refresh data must not create an extra undo step");
+assert.deepEqual(history.redo(), { shots: "trimmed", seconds: 20 });
+history.record({ shots: "short", seconds: 5 });
+assert.deepEqual(history.undo(), { shots: "trimmed", seconds: 20 }, "duration belongs to the same timeline edit");
+history.record({ shots: "new branch", seconds: 20 });
+assert.equal(history.canRedo, false, "editing after Undo discards only the redo branch");
+history.reset({ shots: "external edit", seconds: 30 });
+assert.equal(history.canUndo, false, "external graph edits cannot be overwritten by stale local history");
+for (let i = 0; i < 10; i++) history.record({ shots: `edit ${i}`, seconds: 30 });
+let count = 0;
+while (history.undo()) count++;
+assert.equal(count, 3, "bounded history keeps recent complete snapshots");
+console.log("Timeline edit history passed.");

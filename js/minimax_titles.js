@@ -5,6 +5,9 @@
 // does not reach back into saved graphs. This rewrites those stale titles on load, but
 // only when the title is exactly the old default: a title the user typed themselves is
 // theirs to keep.
+//
+// The same pass marks the original Director as Legacy: a node still carrying its plain default title is
+// relabelled "(Legacy)", so a workflow built before the NG nodes existed shows what it is.
 
 const { app } = window.comfyAPI.app;
 
@@ -12,14 +15,19 @@ const RENAMED = {
   MiniMaxH3DirectorCS: "MiniMax H3 Director",
   MiniMaxH3PreviewOverrideCS: "MiniMax H3 Preview Override",
   MiniMaxH3RetakeStitchCS: "MiniMax H3 Retake Stitch",
-  MiniMaxH3DirectorChainCS: "MiniMax H3 Director Chain",
+};
+
+const LEGACY_LABEL = {
+  MiniMaxH3DirectorCS: "MiniMax H3 Director (Legacy)",
 };
 
 function healTitle(node) {
   const current = RENAMED[node?.type];
   if (!current || !node.title) return;
-  if (node.title === current + " CS" || node.title === current + " -CS") {
-    node.title = current;
+  const target = LEGACY_LABEL[node.type] || current;
+  const stale = [current, current + " CS", current + " -CS"];
+  if (node.title !== target && stale.includes(node.title)) {
+    node.title = target;
     node.setDirtyCanvas?.(true, true);
   }
 }

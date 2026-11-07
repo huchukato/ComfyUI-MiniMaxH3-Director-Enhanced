@@ -1,0 +1,109 @@
+{
+  "chapters": [
+    {
+      "id": "start",
+      "title": "1 · Start here",
+      "file": "en/01-start.md"
+    },
+    {
+      "id": "models",
+      "title": "2 · Models and files",
+      "file": "en/02-models.md"
+    },
+    {
+      "id": "wf1-text",
+      "title": "Workflow 1 · Text to video",
+      "file": "en/wf1-text-to-video.md"
+    },
+    {
+      "id": "wf-characters",
+      "title": "Workflow 2 · Characters and voice",
+      "file": "en/wf2-characters-and-voice.md"
+    },
+    {
+      "id": "wf3-music",
+      "title": "Workflow 3 · Music video",
+      "file": "en/wf3-music-video.md"
+    },
+    {
+      "id": "wf4-pictures-as-shots",
+      "title": "Workflow 4 · Shots from pictures",
+      "file": "en/wf4-shots-from-pictures.md"
+    },
+    {
+      "id": "wf5-pictures",
+      "title": "Workflow 5 · Pictures",
+      "file": "en/wf5-pictures.md"
+    },
+    {
+      "id": "wf6-storyboard",
+      "title": "Workflow 6 · Storyboard",
+      "file": "en/wf6-storyboard.md"
+    },
+    {
+      "id": "wf7-control",
+      "title": "Workflow 7 · Control video (pose, canny, depth)",
+      "file": "en/wf7-control-video.md"
+    },
+    {
+      "id": "wf8-inpaint",
+      "title": "Workflow 8 · Inpaint: replace a figure",
+      "file": "en/wf8-inpaint.md"
+    },
+    {
+      "id": "wf9-advanced",
+      "title": "Workflow 9 · Custom sampling (advanced)",
+      "file": "en/14-advanced.md"
+    },
+    {
+      "id": "studio",
+      "title": "The Studio: shots and timeline",
+      "file": "en/04-studio.md"
+    },
+    {
+      "id": "content",
+      "title": "Content cards",
+      "file": "en/05-content.md"
+    },
+    {
+      "id": "modes",
+      "title": "References or first frames",
+      "file": "en/06-modes.md"
+    },
+    {
+      "id": "sound",
+      "title": "Voices, dialogue and songs",
+      "file": "en/07-sound.md"
+    },
+    {
+      "id": "settings",
+      "title": "H3 Director: all settings",
+      "file": "en/08-settings.md"
+    },
+    {
+      "id": "ai",
+      "title": "Writing with the AI",
+      "file": "en/09-ai.md"
+    },
+    {
+      "id": "pictures",
+      "title": "Pictures and the picture editor",
+      "file": "en/10-pictures.md"
+    },
+    {
+      "id": "storyboard",
+      "title": "Storyboard",
+      "file": "en/11-storyboard.md"
+    },
+    {
+      "id": "control",
+      "title": "Control video (experimental)",
+      "file": "en/12-control.md"
+    },
+    {
+      "id": "tips",
+      "title": "Tips and problems",
+      "file": "en/13-tips.md"
+    }
+  ]
+}

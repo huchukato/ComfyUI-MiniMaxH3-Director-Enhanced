@@ -94,7 +94,7 @@ class MiniMaxH3RetakeStitch(io.ComfyNode):
         return io.Schema(
             node_id="MiniMaxH3RetakeStitchCS",
             display_name="MiniMax H3 Retake Stitch",
-            category="MiniMax H3",
+            category="MiniMax H3/Legacy",
             description=(
                 "Splices a Retake Mode result back into its base video: base head + the "
                 "generated range + base tail, video and audio, all on H3's 24 fps grid. "

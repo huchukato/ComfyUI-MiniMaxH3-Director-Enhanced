@@ -1,0 +1,1459 @@
+{
+ "id": "edd0380f-4862-41a1-b13e-53897e7e532d",
+ "revision": 0,
+ "last_node_id": 22,
+ "last_link_id": 24,
+ "nodes": [
+  {
+   "id": 6,
+   "type": "NGContextConnector",
+   "pos": [
+    1270,
+    0
+   ],
+   "size": [
+    660,
+    433
+   ],
+   "flags": {},
+   "order": 11,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "CLIP",
+     "name": "clip",
+     "type": "CLIP",
+     "link": 13
+    },
+    {
+     "localized_name": "VAE",
+     "name": "vae",
+     "type": "VAE",
+     "link": 14
+    },
+    {
+     "localized_name": "audio VAE",
+     "name": "audio_vae",
+     "type": "VAE",
+     "link": 15
+    },
+    {
+     "localized_name": "model",
+     "name": "model_fl2va",
+     "shape": 7,
+     "type": "MODEL",
+     "link": 11
+    },
+    {
+     "localized_name": "model ref",
+     "name": "model_ref2va",
+     "shape": 7,
+     "type": "MODEL",
+     "link": 12
+    },
+    {
+     "localized_name": "AI provider",
+     "name": "ai_provider",
+     "shape": 7,
+     "type": "NG_AI_PROVIDER",
+     "link": 20
+    },
+    {
+     "label": "context text 1",
+     "localized_name": "text_0",
+     "name": "context_text.text_0",
+     "shape": 7,
+     "type": "NG_CONTEXT",
+     "link": null
+    },
+    {
+     "label": "context image 1",
+     "localized_name": "image_0",
+     "name": "context_image.image_0",
+     "shape": 7,
+     "type": "NG_CONTEXT",
+     "link": 6
+    },
+    {
+     "label": "context image 2",
+     "localized_name": "image_1",
+     "name": "context_image.image_1",
+     "shape": 7,
+     "type": "NG_CONTEXT",
+     "link": 22
+    },
+    {
+     "label": "context image 3",
+     "localized_name": "image_2",
+     "name": "context_image.image_2",
+     "shape": 7,
+     "type": "NG_CONTEXT",
+     "link": 24
+    },
+    {
+     "label": "context image 4",
+     "localized_name": "image_3",
+     "name": "context_image.image_3",
+     "shape": 7,
+     "type": "NG_CONTEXT",
+     "link": null
+    },
+    {
+     "label": "context video 1",
+     "localized_name": "video_0",
+     "name": "context_video.video_0",
+     "shape": 7,
+     "type": "NG_CONTEXT",
+     "link": null
+    },
+    {
+     "label": "context audio 1",
+     "localized_name": "audio_0",
+     "name": "context_audio.audio_0",
+     "shape": 7,
+     "type": "NG_CONTEXT",
+     "link": null
+    },
+    {
+     "localized_name": "preview VAE",
+     "name": "preview_vae",
+     "shape": 7,
+     "type": "VAE",
+     "link": 16
+    },
+    {
+     "localized_name": "model_patch",
+     "name": "model_patch",
+     "shape": 7,
+     "type": "MODEL_PATCH",
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "H3 context",
+     "name": "H3 context",
+     "type": "NG_DIRECTOR_INPUT",
+     "links": [
+      8,
+      21
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "NGContextConnector",
+    "cnr_id": "minimaxh3-director",
+    "ver": "90325669a6f447855b75a4da2a6b01e127b62e31"
+   },
+   "widgets_values": [
+    ""
+   ],
+   "widgets_values_named": {
+    "ng_product": ""
+   },
+   "color": "#162b45",
+   "bgcolor": "#101a2c"
+  },
+  {
+   "id": 7,
+   "type": "NGContextImage",
+   "pos": [
+    500,
+    0
+   ],
+   "size": [
+    660,
+    780
+   ],
+   "flags": {},
+   "order": 9,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "AI provider",
+     "name": "ai_provider",
+     "shape": 7,
+     "type": "NG_AI_PROVIDER",
+     "link": 17
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "context",
+     "name": "context",
+     "type": "NG_CONTEXT",
+     "links": [
+      6
+     ]
+    }
+   ],
+   "properties": {
+    "ng_preview_settings": {
+     "volume": 1,
+     "fade_in": 0,
+     "fade_out": 0
+    },
+    "Node name for S&R": "NGContextImage",
+    "cnr_id": "minimaxh3-director",
+    "ver": "90325669a6f447855b75a4da2a6b01e127b62e31"
+   },
+   "widgets_values": [
+    "h3-example-luna-sheet.jpg",
+    "Luna",
+    "Luna-Arc: an adult sorceress with very long violet hair and a glowing violet halo, a black and violet armoured dress with purple crystals, long gloves, thigh-high violet boots and a glowing violet sword.",
+    "character",
+    "reference",
+    "high",
+    "ctx_luna",
+    "#a774f2",
+    "",
+    "",
+    "",
+    "",
+    "image",
+    ""
+   ],
+   "widgets_values_named": {
+    "image": "h3-example-luna-sheet.jpg",
+    "name": "Luna",
+    "description": "Luna-Arc: an adult sorceress with very long violet hair and a glowing violet halo, a black and violet armoured dress with purple crystals, long gloves, thigh-high violet boots and a glowing violet sword.",
+    "content": "character",
+    "usage": "reference",
+    "preserve": "high",
+    "context_id": "ctx_luna",
+    "color": "#a774f2",
+    "content_roles": "",
+    "usage_roles": "",
+    "context_options": "",
+    "subject_ids": "",
+    "upload": "image",
+    "h3c_card": ""
+   },
+   "color": "#192842",
+   "bgcolor": "#101a2c"
+  },
+  {
+   "id": 9,
+   "type": "NGH3Director",
+   "pos": [
+    1960,
+    0
+   ],
+   "size": [
+    1400,
+    1030
+   ],
+   "flags": {},
+   "order": 12,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "context",
+     "name": "context",
+     "type": "NG_DIRECTOR_INPUT",
+     "link": 8
+    },
+    {
+     "localized_name": "prepend_text",
+     "name": "prepend_text",
+     "shape": 7,
+     "type": "STRING",
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "result",
+     "name": "result",
+     "type": "NG_DIRECTOR_RESULT",
+     "links": [
+      9
+     ]
+    },
+    {
+     "localized_name": "chunks",
+     "name": "chunks",
+     "shape": 6,
+     "type": "NG_CHUNK",
+     "links": null
+    }
+   ],
+   "properties": {
+    "ng_context_names": {
+     "ctx_luna": "Luna",
+     "ctx_inferna": "Inferna",
+     "ctx_d90f3d5f13d2ef9721220a62d86b624e": "Storyboard"
+    },
+    "Node name for S&R": "NGH3Director",
+    "cnr_id": "minimaxh3-director",
+    "ver": "90325669a6f447855b75a4da2a6b01e127b62e31",
+    "models": [
+     {
+      "name": "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/loras/minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+      "directory": "loras"
+     },
+     {
+      "name": "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/loras/minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+      "directory": "loras"
+     }
+    ]
+   },
+   "widgets_values": [
+    "@Luna and @Inferna meet in a candle-lit gothic hall, show each other their magic and seal a pact.",
+    "{\"format\": \"h3-director-shots\", \"schema_version\": 1, \"shots\": [{\"id\": \"sb-p1\", \"start\": 0, \"end\": 5, \"text\": \"Wide shot of a candle-lit gothic hall: @Luna stands on the left, @Inferna on the right, facing each other across the shining floor. The camera slowly pushes in.\", \"media\": [{\"schema_version\": 1, \"context_id\": \"ctx_d90f3d5f13d2ef9721220a62d86b624e\", \"role\": \"storyboard\"}], \"spoken\": [], \"locked_fields\": [], \"draft\": null}, {\"id\": \"sb-p2\", \"start\": 5, \"end\": 10, \"text\": \"Medium two-shot: @Luna on the left and @Inferna on the right step closer and look at each other with calm, curious expressions. Static camera.\", \"media\": [{\"schema_version\": 1, \"context_id\": \"ctx_d90f3d5f13d2ef9721220a62d86b624e\", \"role\": \"storyboard\"}], \"spoken\": [], \"locked_fields\": [], \"draft\": null}, {\"id\": \"sb-p3\", \"start\": 10, \"end\": 15, \"text\": \"Medium shot: @Luna raises her hand and a violet spell glows above it; @Inferna opens her hand and a small flame rises from it. The camera slowly orbits to the right.\", \"media\": [{\"schema_version\": 1, \"context_id\": \"ctx_d90f3d5f13d2ef9721220a62d86b624e\", \"role\": \"storyboard\"}], \"spoken\": [], \"locked_fields\": [], \"draft\": null}, {\"id\": \"sb-p4\", \"start\": 15, \"end\": 20, \"text\": \"Medium close-up: @Luna and @Inferna shake hands and smile at each other, sealing their pact. Slow push-in, then hold.\", \"media\": [{\"schema_version\": 1, \"context_id\": \"ctx_d90f3d5f13d2ef9721220a62d86b624e\", \"role\": \"storyboard\"}], \"spoken\": [], \"locked_fields\": [], \"draft\": null}], \"audio\": [], \"audio_lanes\": [], \"look\": \"Dark gothic fantasy in a polished anime style, warm candle light, glowing violet and red magic, smooth natural motion.\"}",
+    20,
+    0,
+    1280,
+    704,
+    "ref2va",
+    "video_audio",
+    "22",
+    "Footsteps on cobblestones, distant voices, a church bell.",
+    "N/A",
+    "None",
+    2026,
+    "fixed",
+    6,
+    "res_multistep",
+    "simple",
+    12,
+    3,
+    true,
+    "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+    "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+    "crop",
+    "match",
+    "",
+    true,
+    true,
+    1,
+    0,
+    1,
+    "",
+    "video",
+    false,
+    ""
+   ],
+   "widgets_values_named": {
+    "idea": "@Luna and @Inferna meet in a candle-lit gothic hall, show each other their magic and seal a pact.",
+    "shots": "{\"format\": \"h3-director-shots\", \"schema_version\": 1, \"shots\": [{\"id\": \"sb-p1\", \"start\": 0, \"end\": 5, \"text\": \"Wide shot of a candle-lit gothic hall: @Luna stands on the left, @Inferna on the right, facing each other across the shining floor. The camera slowly pushes in.\", \"media\": [{\"schema_version\": 1, \"context_id\": \"ctx_d90f3d5f13d2ef9721220a62d86b624e\", \"role\": \"storyboard\"}], \"spoken\": [], \"locked_fields\": [], \"draft\": null}, {\"id\": \"sb-p2\", \"start\": 5, \"end\": 10, \"text\": \"Medium two-shot: @Luna on the left and @Inferna on the right step closer and look at each other with calm, curious expressions. Static camera.\", \"media\": [{\"schema_version\": 1, \"context_id\": \"ctx_d90f3d5f13d2ef9721220a62d86b624e\", \"role\": \"storyboard\"}], \"spoken\": [], \"locked_fields\": [], \"draft\": null}, {\"id\": \"sb-p3\", \"start\": 10, \"end\": 15, \"text\": \"Medium shot: @Luna raises her hand and a violet spell glows above it; @Inferna opens her hand and a small flame rises from it. The camera slowly orbits to the right.\", \"media\": [{\"schema_version\": 1, \"context_id\": \"ctx_d90f3d5f13d2ef9721220a62d86b624e\", \"role\": \"storyboard\"}], \"spoken\": [], \"locked_fields\": [], \"draft\": null}, {\"id\": \"sb-p4\", \"start\": 15, \"end\": 20, \"text\": \"Medium close-up: @Luna and @Inferna shake hands and smile at each other, sealing their pact. Slow push-in, then hold.\", \"media\": [{\"schema_version\": 1, \"context_id\": \"ctx_d90f3d5f13d2ef9721220a62d86b624e\", \"role\": \"storyboard\"}], \"spoken\": [], \"locked_fields\": [], \"draft\": null}], \"audio\": [], \"audio_lanes\": [], \"look\": \"Dark gothic fantasy in a polished anime style, warm candle light, glowing violet and red magic, smooth natural motion.\"}",
+    "project_seconds": 20,
+    "chunk_seconds": 0,
+    "width": 1280,
+    "height": 704,
+    "mode": "ref2va",
+    "continuity": "video_audio",
+    "pin_frames": "22",
+    "soundscape": "Footsteps on cobblestones, distant voices, a church bell.",
+    "music": "N/A",
+    "style": "None",
+    "seed": 2026,
+    "control_after_generate": "fixed",
+    "steps": 6,
+    "sampler_name": "res_multistep",
+    "scheduler": "simple",
+    "shift_video": 12,
+    "shift_audio": 3,
+    "turbo": true,
+    "turbo_lora_fl2va": "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+    "turbo_lora_ref2va": "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+    "resize_method": "crop",
+    "ref_image_size": "match",
+    "prompt_override": "",
+    "resume": true,
+    "resume_delete_done": true,
+    "control_strength": 1,
+    "control_start": 0,
+    "control_end": 1,
+    "models": "",
+    "output": "video",
+    "spectrum": false,
+    "h3_director": ""
+   },
+   "color": "#172a48",
+   "bgcolor": "#101a2c"
+  },
+  {
+   "id": 10,
+   "type": "NGProjectRender",
+   "pos": [
+    3380,
+    0
+   ],
+   "size": [
+    480,
+    250
+   ],
+   "flags": {},
+   "order": 14,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "sequence",
+     "name": "sequence",
+     "type": "NG_DIRECTOR_RESULT",
+     "link": 9
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "video",
+     "name": "video",
+     "type": "VIDEO",
+     "links": [
+      10
+     ]
+    },
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "links": null
+    },
+    {
+     "localized_name": "audio",
+     "name": "audio",
+     "type": "AUDIO",
+     "links": null
+    },
+    {
+     "localized_name": "render_warnings",
+     "name": "render_warnings",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "NGProjectRender",
+    "cnr_id": "minimaxh3-director",
+    "ver": "90325669a6f447855b75a4da2a6b01e127b62e31"
+   },
+   "widgets_values": [
+    ""
+   ],
+   "widgets_values_named": {
+    "ng_product": ""
+   },
+   "color": "#162b45",
+   "bgcolor": "#101a2c"
+  },
+  {
+   "id": 11,
+   "type": "SaveVideo",
+   "pos": [
+    3920,
+    -50
+   ],
+   "size": [
+    1050,
+    1180
+   ],
+   "flags": {},
+   "order": 15,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "video",
+     "name": "video",
+     "type": "VIDEO",
+     "link": 10
+    },
+    {
+     "localized_name": "filename_prefix",
+     "name": "filename_prefix",
+     "type": "STRING",
+     "widget": {
+      "name": "filename_prefix"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "format",
+     "name": "format",
+     "type": "COMFY_DYNAMICCOMBO_V3",
+     "widget": {
+      "name": "format"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "codec",
+     "name": "format.codec",
+     "type": "COMFY_DYNAMICCOMBO_V3",
+     "widget": {
+      "name": "format.codec"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "codec",
+     "name": "codec",
+     "shape": 7,
+     "type": "COMFY_DYNAMICCOMBO_V3",
+     "widget": {
+      "name": "codec"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "video",
+     "name": "video",
+     "type": "VIDEO",
+     "links": null
+    }
+   ],
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.42.0",
+    "Node name for S&R": "SaveVideo"
+   },
+   "widgets_values": [
+    "H3/storyboard",
+    "auto",
+    "auto",
+    "auto"
+   ],
+   "widgets_values_named": {
+    "filename_prefix": "H3/storyboard",
+    "format": "auto",
+    "format.codec": "auto",
+    "codec": "auto"
+   },
+   "color": "#223",
+   "bgcolor": "#335"
+  },
+  {
+   "id": 12,
+   "type": "NGGuide",
+   "pos": [
+    -820,
+    0
+   ],
+   "size": [
+    700,
+    900
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "properties": {
+    "Node name for S&R": "NGGuide",
+    "cnr_id": "minimaxh3-director",
+    "ver": "90325669a6f447855b75a4da2a6b01e127b62e31"
+   },
+   "widgets_values": [
+    "wf6-storyboard",
+    ""
+   ],
+   "widgets_values_named": {
+    "chapter": "wf6-storyboard",
+    "h3_guide": ""
+   }
+  },
+  {
+   "id": 13,
+   "type": "UNETLoader",
+   "pos": [
+    -60,
+    0
+   ],
+   "size": [
+    490,
+    90
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "unet_name",
+     "name": "unet_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "unet_name"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "weight_dtype",
+     "name": "weight_dtype",
+     "type": "COMBO",
+     "widget": {
+      "name": "weight_dtype"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "MODEL",
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      11
+     ]
+    }
+   ],
+   "title": "Model: First / last frame (fl2va)",
+   "properties": {
+    "Node name for S&R": "UNETLoader",
+    "cnr_id": "comfy-core",
+    "ver": "0.42.0",
+    "models": [
+     {
+      "name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "directory": "diffusion_models"
+     }
+    ]
+   },
+   "widgets_values": [
+    "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+    "default"
+   ],
+   "widgets_values_named": {
+    "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+    "weight_dtype": "default"
+   },
+   "color": "#223",
+   "bgcolor": "#335"
+  },
+  {
+   "id": 14,
+   "type": "UNETLoader",
+   "pos": [
+    -60,
+    140
+   ],
+   "size": [
+    490,
+    90
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "unet_name",
+     "name": "unet_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "unet_name"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "weight_dtype",
+     "name": "weight_dtype",
+     "type": "COMBO",
+     "widget": {
+      "name": "weight_dtype"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "MODEL",
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      12
+     ]
+    }
+   ],
+   "title": "Model: References (ref2va)",
+   "properties": {
+    "Node name for S&R": "UNETLoader",
+    "cnr_id": "comfy-core",
+    "ver": "0.42.0",
+    "models": [
+     {
+      "name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/diffusion_models/minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+      "directory": "diffusion_models"
+     }
+    ]
+   },
+   "widgets_values": [
+    "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+    "default"
+   ],
+   "widgets_values_named": {
+    "unet_name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+    "weight_dtype": "default"
+   },
+   "color": "#223",
+   "bgcolor": "#335"
+  },
+  {
+   "id": 15,
+   "type": "CLIPLoader",
+   "pos": [
+    -60,
+    280
+   ],
+   "size": [
+    490,
+    120
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "clip_name",
+     "name": "clip_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "clip_name"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "type",
+     "name": "type",
+     "type": "COMBO",
+     "widget": {
+      "name": "type"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "device",
+     "name": "device",
+     "shape": 7,
+     "type": "COMBO",
+     "widget": {
+      "name": "device"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "CLIP",
+     "name": "CLIP",
+     "type": "CLIP",
+     "links": [
+      13,
+      19
+     ]
+    }
+   ],
+   "title": "Text encoder",
+   "properties": {
+    "Node name for S&R": "CLIPLoader",
+    "cnr_id": "comfy-core",
+    "ver": "0.42.0",
+    "models": [
+     {
+      "name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "directory": "text_encoders"
+     }
+    ]
+   },
+   "widgets_values": [
+    "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+    "minimax",
+    "default"
+   ],
+   "widgets_values_named": {
+    "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+    "type": "minimax",
+    "device": "default"
+   },
+   "color": "#432",
+   "bgcolor": "#653"
+  },
+  {
+   "id": 16,
+   "type": "VAELoader",
+   "pos": [
+    -60,
+    450
+   ],
+   "size": [
+    490,
+    70
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "vae_name",
+     "name": "vae_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "vae_name"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "VAE",
+     "name": "VAE",
+     "type": "VAE",
+     "links": [
+      14
+     ]
+    }
+   ],
+   "title": "Video VAE",
+   "properties": {
+    "Node name for S&R": "VAELoader",
+    "cnr_id": "comfy-core",
+    "ver": "0.42.0",
+    "models": [
+     {
+      "name": "minimax_h3_video_vae_fp16.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_video_vae_fp16.safetensors",
+      "directory": "vae"
+     }
+    ]
+   },
+   "widgets_values": [
+    "minimax_h3_video_vae_fp16.safetensors"
+   ],
+   "widgets_values_named": {
+    "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+   },
+   "color": "#322",
+   "bgcolor": "#533"
+  },
+  {
+   "id": 17,
+   "type": "VAELoader",
+   "pos": [
+    -60,
+    570
+   ],
+   "size": [
+    490,
+    70
+   ],
+   "flags": {},
+   "order": 5,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "vae_name",
+     "name": "vae_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "vae_name"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "VAE",
+     "name": "VAE",
+     "type": "VAE",
+     "links": [
+      15
+     ]
+    }
+   ],
+   "title": "Audio VAE",
+   "properties": {
+    "Node name for S&R": "VAELoader",
+    "cnr_id": "comfy-core",
+    "ver": "0.42.0",
+    "models": [
+     {
+      "name": "minimax_h3_audio_vae_fp32.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_audio_vae_fp32.safetensors",
+      "directory": "vae"
+     }
+    ]
+   },
+   "widgets_values": [
+    "minimax_h3_audio_vae_fp32.safetensors"
+   ],
+   "widgets_values_named": {
+    "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+   },
+   "color": "#332922",
+   "bgcolor": "#593930"
+  },
+  {
+   "id": 18,
+   "type": "VAELoader",
+   "pos": [
+    -60,
+    680
+   ],
+   "size": [
+    490,
+    70
+   ],
+   "flags": {},
+   "order": 6,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "vae_name",
+     "name": "vae_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "vae_name"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "VAE",
+     "name": "VAE",
+     "type": "VAE",
+     "links": [
+      16
+     ]
+    }
+   ],
+   "title": "Preview VAE",
+   "properties": {
+    "Node name for S&R": "VAELoader",
+    "cnr_id": "comfy-core",
+    "ver": "0.42.0",
+    "models": [
+     {
+      "name": "taeh3.safetensors",
+      "url": "https://huggingface.co/Kijai/MiniMax-H3-TAE/resolve/main/vae_approx/taeh3.safetensors",
+      "directory": "vae_approx"
+     }
+    ]
+   },
+   "widgets_values": [
+    "taeh3.safetensors"
+   ],
+   "widgets_values_named": {
+    "vae_name": "taeh3.safetensors"
+   },
+   "color": "#323",
+   "bgcolor": "#535"
+  },
+  {
+   "id": 19,
+   "type": "NGAIProvider",
+   "pos": [
+    1270,
+    550
+   ],
+   "size": [
+    660,
+    667
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "CLIP",
+     "name": "clip",
+     "shape": 7,
+     "type": "CLIP",
+     "link": 19
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "AI provider",
+     "name": "AI provider",
+     "type": "NG_AI_PROVIDER",
+     "links": [
+      17,
+      20,
+      23
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "NGAIProvider",
+    "cnr_id": "minimaxh3-director",
+    "ver": "90325669a6f447855b75a4da2a6b01e127b62e31"
+   },
+   "widgets_values": [
+    "local",
+    "ollama",
+    "",
+    "",
+    "",
+    true,
+    false,
+    120,
+    512,
+    0,
+    0.3,
+    0.9,
+    40,
+    0,
+    0,
+    0,
+    0,
+    false,
+    "",
+    "stable_diffusion",
+    ""
+   ],
+   "widgets_values_named": {
+    "source": "local",
+    "provider": "ollama",
+    "base_url": "",
+    "model": "",
+    "api_key_env": "",
+    "vision": true,
+    "audio": false,
+    "timeout_seconds": 120,
+    "max_tokens": 512,
+    "keep_alive": 0,
+    "temperature": 0.3,
+    "top_p": 0.9,
+    "top_k": 40,
+    "min_p": 0,
+    "frequency_penalty": 0,
+    "presence_penalty": 0,
+    "seed": 0,
+    "fixed_seed": false,
+    "local_model": "",
+    "local_type": "stable_diffusion",
+    "ng_product": ""
+   },
+   "color": "#162b45",
+   "bgcolor": "#101a2c"
+  },
+  {
+   "id": 20,
+   "type": "NGStoryboard",
+   "pos": [
+    1960,
+    1360
+   ],
+   "size": [
+    1300,
+    1255
+   ],
+   "flags": {},
+   "order": 13,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "H3 context",
+     "name": "context",
+     "shape": 7,
+     "type": "NG_DIRECTOR_INPUT",
+     "link": 21
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "sheet",
+     "name": "sheet",
+     "type": "IMAGE",
+     "links": null
+    },
+    {
+     "localized_name": "panels",
+     "name": "panels",
+     "type": "IMAGE",
+     "links": null
+    },
+    {
+     "localized_name": "shots",
+     "name": "shots",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "NGStoryboard"
+   },
+   "widgets_values": [
+    "{\"format\": \"h3-storyboard\", \"schema_version\": 1, \"id\": \"sbexample6\", \"title\": \"LUNA AND INFERNA - THE PACT\", \"subtitle\": \"LUNA-ARC & INFERNA-FLAME - 20 SECONDS\", \"aspect\": \"16:9\", \"idea\": \"@Luna and @Inferna meet in a candle-lit gothic hall, show each other their magic and seal a pact.\", \"panels\": [{\"id\": \"p1\", \"seconds\": 5, \"title\": \"ARRIVAL\", \"caption\": \"Luna and Inferna enter the candle-lit hall from opposite sides and stop, keeping their distance.\", \"shot\": \"Wide shot of a candle-lit gothic hall: @Luna stands on the left, @Inferna on the right, facing each other across the shining floor. The camera slowly pushes in.\", \"first_frame\": false, \"last_frame\": false, \"layers\": [{\"id\": \"l1\", \"kind\": \"image\", \"name\": \"Hall\", \"x\": 0.5, \"y\": 0.5, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-hall.jpg\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 1, \"redrawn\": false}, {\"id\": \"l2\", \"kind\": \"image\", \"name\": \"Luna\", \"x\": 0.3, \"y\": 0.64, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-luna-figure.webp\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 0.17, \"redrawn\": false}, {\"id\": \"l3\", \"kind\": \"image\", \"name\": \"Inferna\", \"x\": 0.72, \"y\": 0.64, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-inferna-figure.webp\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 0.17, \"redrawn\": false}, {\"id\": \"lnqwqbno\", \"kind\": \"image\", \"name\": \"Redrawn (Qwen Image 2.1)\", \"x\": 0.5, \"y\": 0.5, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-panel1.jpg\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 1.0078125, \"redrawn\": true}]}, {\"id\": \"p2\", \"seconds\": 5, \"title\": \"APPROACH\", \"caption\": \"They step closer and size each other up with calm, curious looks.\", \"shot\": \"Medium two-shot: @Luna on the left and @Inferna on the right step closer and look at each other with calm, curious expressions. Static camera.\", \"first_frame\": false, \"last_frame\": false, \"layers\": [{\"id\": \"l4\", \"kind\": \"image\", \"name\": \"Hall\", \"x\": 0.5, \"y\": 0.5, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-hall.jpg\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 1, \"redrawn\": false}, {\"id\": \"l5\", \"kind\": \"image\", \"name\": \"Luna\", \"x\": 0.3, \"y\": 0.7, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-luna-figure.webp\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 0.42, \"redrawn\": false}, {\"id\": \"l6\", \"kind\": \"image\", \"name\": \"Inferna\", \"x\": 0.7, \"y\": 0.7, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-inferna-figure.webp\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 0.42, \"redrawn\": false}, {\"id\": \"lod40fmq\", \"kind\": \"image\", \"name\": \"Redrawn (Qwen Image 2.1)\", \"x\": 0.5, \"y\": 0.5, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-panel2.jpg\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 1.0078125, \"redrawn\": true}]}, {\"id\": \"p3\", \"seconds\": 5, \"title\": \"SHARED MAGIC\", \"caption\": \"Luna conjures a violet spell, Inferna answers with a flame in her open hand.\", \"shot\": \"Medium shot: @Luna raises her hand and a violet spell glows above it; @Inferna opens her hand and a small flame rises from it. The camera slowly orbits to the right.\", \"first_frame\": false, \"last_frame\": false, \"layers\": [{\"id\": \"l7\", \"kind\": \"image\", \"name\": \"Hall\", \"x\": 0.5, \"y\": 0.5, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-hall.jpg\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 1, \"redrawn\": false}, {\"id\": \"l8\", \"kind\": \"image\", \"name\": \"Luna\", \"x\": 0.3, \"y\": 0.72, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-luna-cutout.webp\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 0.46, \"redrawn\": false}, {\"id\": \"l9\", \"kind\": \"image\", \"name\": \"Inferna\", \"x\": 0.7, \"y\": 0.72, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-inferna-cutout.webp\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 0.46, \"redrawn\": false}, {\"id\": \"lwz8ao4n\", \"kind\": \"image\", \"name\": \"Redrawn (Qwen Image 2.1)\", \"x\": 0.5, \"y\": 0.5, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-panel3.jpg\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 1.0078125, \"redrawn\": true}]}, {\"id\": \"p4\", \"seconds\": 5, \"title\": \"THE PACT\", \"caption\": \"They shake hands and stand together as allies.\", \"shot\": \"Medium close-up: @Luna and @Inferna shake hands and smile at each other, sealing their pact. Slow push-in, then hold.\", \"first_frame\": false, \"last_frame\": false, \"layers\": [{\"id\": \"l10\", \"kind\": \"image\", \"name\": \"Hall\", \"x\": 0.5, \"y\": 0.5, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-hall.jpg\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 1, \"redrawn\": false}, {\"id\": \"l11\", \"kind\": \"image\", \"name\": \"Luna\", \"x\": 0.36, \"y\": 0.8, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-luna-cutout.webp\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 0.6, \"redrawn\": false}, {\"id\": \"l12\", \"kind\": \"image\", \"name\": \"Inferna\", \"x\": 0.64, \"y\": 0.8, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-inferna-cutout.webp\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 0.6, \"redrawn\": false}, {\"id\": \"lwrtze4q\", \"kind\": \"image\", \"name\": \"Redrawn (Qwen Image 2.1)\", \"x\": 0.5, \"y\": 0.5, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-panel4.jpg\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 1.0078125, \"redrawn\": true}]}], \"library\": [{\"id\": \"a1\", \"name\": \"Hall\", \"kind\": \"background\", \"src\": {\"filename\": \"h3-example-hall.jpg\", \"subfolder\": \"\", \"type\": \"input\"}}, {\"id\": \"a2\", \"name\": \"Luna\", \"kind\": \"figure\", \"src\": {\"filename\": \"h3-example-luna-figure.webp\", \"subfolder\": \"\", \"type\": \"input\"}}, {\"id\": \"a3\", \"name\": \"Inferna\", \"kind\": \"figure\", \"src\": {\"filename\": \"h3-example-inferna-figure.webp\", \"subfolder\": \"\", \"type\": \"input\"}}]}",
+    "",
+    ""
+   ],
+   "widgets_values_named": {
+    "board": "{\"format\": \"h3-storyboard\", \"schema_version\": 1, \"id\": \"sbexample6\", \"title\": \"LUNA AND INFERNA - THE PACT\", \"subtitle\": \"LUNA-ARC & INFERNA-FLAME - 20 SECONDS\", \"aspect\": \"16:9\", \"idea\": \"@Luna and @Inferna meet in a candle-lit gothic hall, show each other their magic and seal a pact.\", \"panels\": [{\"id\": \"p1\", \"seconds\": 5, \"title\": \"ARRIVAL\", \"caption\": \"Luna and Inferna enter the candle-lit hall from opposite sides and stop, keeping their distance.\", \"shot\": \"Wide shot of a candle-lit gothic hall: @Luna stands on the left, @Inferna on the right, facing each other across the shining floor. The camera slowly pushes in.\", \"first_frame\": false, \"last_frame\": false, \"layers\": [{\"id\": \"l1\", \"kind\": \"image\", \"name\": \"Hall\", \"x\": 0.5, \"y\": 0.5, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-hall.jpg\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 1, \"redrawn\": false}, {\"id\": \"l2\", \"kind\": \"image\", \"name\": \"Luna\", \"x\": 0.3, \"y\": 0.64, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-luna-figure.webp\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 0.17, \"redrawn\": false}, {\"id\": \"l3\", \"kind\": \"image\", \"name\": \"Inferna\", \"x\": 0.72, \"y\": 0.64, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-inferna-figure.webp\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 0.17, \"redrawn\": false}, {\"id\": \"lnqwqbno\", \"kind\": \"image\", \"name\": \"Redrawn (Qwen Image 2.1)\", \"x\": 0.5, \"y\": 0.5, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-panel1.jpg\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 1.0078125, \"redrawn\": true}]}, {\"id\": \"p2\", \"seconds\": 5, \"title\": \"APPROACH\", \"caption\": \"They step closer and size each other up with calm, curious looks.\", \"shot\": \"Medium two-shot: @Luna on the left and @Inferna on the right step closer and look at each other with calm, curious expressions. Static camera.\", \"first_frame\": false, \"last_frame\": false, \"layers\": [{\"id\": \"l4\", \"kind\": \"image\", \"name\": \"Hall\", \"x\": 0.5, \"y\": 0.5, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-hall.jpg\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 1, \"redrawn\": false}, {\"id\": \"l5\", \"kind\": \"image\", \"name\": \"Luna\", \"x\": 0.3, \"y\": 0.7, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-luna-figure.webp\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 0.42, \"redrawn\": false}, {\"id\": \"l6\", \"kind\": \"image\", \"name\": \"Inferna\", \"x\": 0.7, \"y\": 0.7, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-inferna-figure.webp\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 0.42, \"redrawn\": false}, {\"id\": \"lod40fmq\", \"kind\": \"image\", \"name\": \"Redrawn (Qwen Image 2.1)\", \"x\": 0.5, \"y\": 0.5, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-panel2.jpg\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 1.0078125, \"redrawn\": true}]}, {\"id\": \"p3\", \"seconds\": 5, \"title\": \"SHARED MAGIC\", \"caption\": \"Luna conjures a violet spell, Inferna answers with a flame in her open hand.\", \"shot\": \"Medium shot: @Luna raises her hand and a violet spell glows above it; @Inferna opens her hand and a small flame rises from it. The camera slowly orbits to the right.\", \"first_frame\": false, \"last_frame\": false, \"layers\": [{\"id\": \"l7\", \"kind\": \"image\", \"name\": \"Hall\", \"x\": 0.5, \"y\": 0.5, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-hall.jpg\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 1, \"redrawn\": false}, {\"id\": \"l8\", \"kind\": \"image\", \"name\": \"Luna\", \"x\": 0.3, \"y\": 0.72, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-luna-cutout.webp\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 0.46, \"redrawn\": false}, {\"id\": \"l9\", \"kind\": \"image\", \"name\": \"Inferna\", \"x\": 0.7, \"y\": 0.72, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-inferna-cutout.webp\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 0.46, \"redrawn\": false}, {\"id\": \"lwz8ao4n\", \"kind\": \"image\", \"name\": \"Redrawn (Qwen Image 2.1)\", \"x\": 0.5, \"y\": 0.5, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-panel3.jpg\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 1.0078125, \"redrawn\": true}]}, {\"id\": \"p4\", \"seconds\": 5, \"title\": \"THE PACT\", \"caption\": \"They shake hands and stand together as allies.\", \"shot\": \"Medium close-up: @Luna and @Inferna shake hands and smile at each other, sealing their pact. Slow push-in, then hold.\", \"first_frame\": false, \"last_frame\": false, \"layers\": [{\"id\": \"l10\", \"kind\": \"image\", \"name\": \"Hall\", \"x\": 0.5, \"y\": 0.5, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-hall.jpg\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 1, \"redrawn\": false}, {\"id\": \"l11\", \"kind\": \"image\", \"name\": \"Luna\", \"x\": 0.36, \"y\": 0.8, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-luna-cutout.webp\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 0.6, \"redrawn\": false}, {\"id\": \"l12\", \"kind\": \"image\", \"name\": \"Inferna\", \"x\": 0.64, \"y\": 0.8, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-inferna-cutout.webp\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 0.6, \"redrawn\": false}, {\"id\": \"lwrtze4q\", \"kind\": \"image\", \"name\": \"Redrawn (Qwen Image 2.1)\", \"x\": 0.5, \"y\": 0.5, \"rotation\": 0, \"flip\": false, \"opacity\": 1, \"hidden\": false, \"src\": {\"filename\": \"h3-example-panel4.jpg\", \"subfolder\": \"\", \"type\": \"input\"}, \"scale\": 1.0078125, \"redrawn\": true}]}], \"library\": [{\"id\": \"a1\", \"name\": \"Hall\", \"kind\": \"background\", \"src\": {\"filename\": \"h3-example-hall.jpg\", \"subfolder\": \"\", \"type\": \"input\"}}, {\"id\": \"a2\", \"name\": \"Luna\", \"kind\": \"figure\", \"src\": {\"filename\": \"h3-example-luna-figure.webp\", \"subfolder\": \"\", \"type\": \"input\"}}, {\"id\": \"a3\", \"name\": \"Inferna\", \"kind\": \"figure\", \"src\": {\"filename\": \"h3-example-inferna-figure.webp\", \"subfolder\": \"\", \"type\": \"input\"}}]}",
+    "rendered": "",
+    "h3_storyboard": ""
+   },
+   "color": "#162b45",
+   "bgcolor": "#101a2c"
+  },
+  {
+   "id": 21,
+   "type": "NGContextImage",
+   "pos": [
+    500,
+    900
+   ],
+   "size": [
+    660,
+    780
+   ],
+   "flags": {},
+   "order": 10,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "AI provider",
+     "name": "ai_provider",
+     "shape": 7,
+     "type": "NG_AI_PROVIDER",
+     "link": 23
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "context",
+     "name": "context",
+     "type": "NG_CONTEXT",
+     "links": [
+      22
+     ]
+    }
+   ],
+   "properties": {
+    "ng_preview_settings": {
+     "volume": 1,
+     "fade_in": 0,
+     "fade_out": 0
+    },
+    "Node name for S&R": "NGContextImage"
+   },
+   "widgets_values": [
+    "h3-example-inferna-sheet.jpg",
+    "Inferna",
+    "Inferna-Flame: an adult demon woman with long red hair, black curved horns, large red bat wings and a red dragon tail, in black and red armour with glowing red accents.",
+    "character",
+    "reference",
+    "high",
+    "ctx_inferna",
+    "#e0533d",
+    "",
+    "",
+    "",
+    "",
+    "image",
+    ""
+   ],
+   "widgets_values_named": {
+    "image": "h3-example-inferna-sheet.jpg",
+    "name": "Inferna",
+    "description": "Inferna-Flame: an adult demon woman with long red hair, black curved horns, large red bat wings and a red dragon tail, in black and red armour with glowing red accents.",
+    "content": "character",
+    "usage": "reference",
+    "preserve": "high",
+    "context_id": "ctx_inferna",
+    "color": "#e0533d",
+    "content_roles": "",
+    "usage_roles": "",
+    "context_options": "",
+    "subject_ids": "",
+    "upload": "image",
+    "h3c_card": ""
+   },
+   "color": "#192842",
+   "bgcolor": "#101a2c"
+  },
+  {
+   "id": 22,
+   "type": "NGContextImage",
+   "pos": [
+    500,
+    1800
+   ],
+   "size": [
+    660,
+    797
+   ],
+   "flags": {},
+   "order": 7,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "AI provider",
+     "name": "ai_provider",
+     "shape": 7,
+     "type": "NG_AI_PROVIDER",
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "context",
+     "name": "context",
+     "type": "NG_CONTEXT",
+     "links": [
+      24
+     ]
+    }
+   ],
+   "properties": {
+    "ng_preview_settings": {
+     "volume": 1,
+     "fade_in": 0,
+     "fade_out": 0
+    },
+    "Node name for S&R": "NGContextImage"
+   },
+   "widgets_values": [
+    "h3-example-storyboard.png",
+    "Storyboard",
+    "Storyboard of 4 panels with times and captions.",
+    "composition",
+    "storyboard",
+    "high",
+    "ctx_d90f3d5f13d2ef9721220a62d86b624e",
+    "#a1bcec",
+    "[\"composition\"]",
+    "[\"storyboard\"]",
+    "",
+    "",
+    "image",
+    ""
+   ],
+   "widgets_values_named": {
+    "image": "h3-example-storyboard.png",
+    "name": "Storyboard",
+    "description": "Storyboard of 4 panels with times and captions.",
+    "content": "composition",
+    "usage": "storyboard",
+    "preserve": "high",
+    "context_id": "ctx_d90f3d5f13d2ef9721220a62d86b624e",
+    "color": "#a1bcec",
+    "content_roles": "[\"composition\"]",
+    "usage_roles": "[\"storyboard\"]",
+    "context_options": "",
+    "subject_ids": "",
+    "upload": "image",
+    "h3c_card": ""
+   },
+   "color": "#192842",
+   "bgcolor": "#101a2c"
+  }
+ ],
+ "links": [
+  [
+   8,
+   6,
+   0,
+   9,
+   0,
+   "NG_DIRECTOR_INPUT"
+  ],
+  [
+   9,
+   9,
+   0,
+   10,
+   0,
+   "NG_DIRECTOR_RESULT"
+  ],
+  [
+   17,
+   19,
+   0,
+   7,
+   0,
+   "NG_AI_PROVIDER"
+  ],
+  [
+   19,
+   15,
+   0,
+   19,
+   0,
+   "CLIP"
+  ],
+  [
+   21,
+   6,
+   0,
+   20,
+   0,
+   "NG_DIRECTOR_INPUT"
+  ],
+  [
+   23,
+   19,
+   0,
+   21,
+   0,
+   "NG_AI_PROVIDER"
+  ],
+  [
+   10,
+   10,
+   0,
+   11,
+   0,
+   "VIDEO"
+  ],
+  [
+   13,
+   15,
+   0,
+   6,
+   0,
+   "CLIP"
+  ],
+  [
+   14,
+   16,
+   0,
+   6,
+   1,
+   "VAE"
+  ],
+  [
+   15,
+   17,
+   0,
+   6,
+   2,
+   "VAE"
+  ],
+  [
+   11,
+   13,
+   0,
+   6,
+   3,
+   "MODEL"
+  ],
+  [
+   12,
+   14,
+   0,
+   6,
+   4,
+   "MODEL"
+  ],
+  [
+   20,
+   19,
+   0,
+   6,
+   5,
+   "NG_AI_PROVIDER"
+  ],
+  [
+   6,
+   7,
+   0,
+   6,
+   7,
+   "NG_CONTEXT"
+  ],
+  [
+   22,
+   21,
+   0,
+   6,
+   8,
+   "NG_CONTEXT"
+  ],
+  [
+   24,
+   22,
+   0,
+   6,
+   9,
+   "NG_CONTEXT"
+  ],
+  [
+   16,
+   18,
+   0,
+   6,
+   13,
+   "VAE"
+  ]
+ ],
+ "groups": [
+  {
+   "id": 1,
+   "title": "📖 Guide: read me first",
+   "bounding": [
+    -860,
+    -80,
+    760,
+    1010
+   ],
+   "color": "#5a4a1f",
+   "flags": {}
+  },
+  {
+   "id": 3,
+   "title": "🖼️ 2 · Content: pictures, sound, text",
+   "bounding": [
+    470,
+    -80,
+    720,
+    2760
+   ],
+   "color": "#2c3e48",
+   "flags": {}
+  },
+  {
+   "id": 4,
+   "title": "🎬 3 · Director: shots, timeline and Run",
+   "bounding": [
+    1250,
+    -80,
+    2640,
+    1340
+   ],
+   "color": "#2a2f4a",
+   "flags": {}
+  },
+  {
+   "id": 5,
+   "title": "🧩 1 · Models (load once)",
+   "bounding": [
+    -90,
+    -80,
+    550,
+    860
+   ],
+   "color": "#2c3e48",
+   "flags": {}
+  },
+  {
+   "id": 6,
+   "title": "🗂️ 4 · Storyboard: plan the shots as pictures (optional)",
+   "bounding": [
+    1930,
+    1290,
+    1360,
+    1410
+   ],
+   "color": "#2a2f4a",
+   "flags": {}
+  }
+ ],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.9,
+   "offset": [
+    -1915.5555555555557,
+    -1285.5555555555557
+   ]
+  }
+ },
+ "version": 0.4
+}

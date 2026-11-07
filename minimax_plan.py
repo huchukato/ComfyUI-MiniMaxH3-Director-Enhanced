@@ -66,6 +66,24 @@ RETENTION_AUDIO_DEFAULT = "reference"
 # because that is where the editor already keeps "how is this clip used".
 AUDIO_LOCK = "lock"
 
+# --- the sound fields (references/base-en.txt §4.6 and §4.7) --------------------------
+# The two guides make different promises about an empty box, and the difference decides what
+# happens when the user writes nothing.
+#
+# §4.7 non_diegetic_music: "Use `N/A` when there is no non-diegetic music." An empty music
+# box therefore has a value of its own and the field is always written.
+#
+# §4.6 overall_soundscape: "Use 1–4 English sentences in one continuous paragraph to summarize
+# the ambient sound, physical action sounds, and non-verbal human sounds across the full video
+# … Use `N/A` only when the user explicitly requests complete silence throughout the video."
+# Here `N/A` is reserved for a claim only the user can make, so an empty box is not silence —
+# but it is also not permission to leave the field out, because the guide offers no such
+# option. Omitting it produced a prompt that matched neither branch: two of three core
+# fields. The field is therefore always written, and an empty box gets a stated placeholder
+# instead of silence. A user who really wants a silent video types N/A, and that passes
+# through untouched.
+SOUNDSCAPE_PLACEHOLDER = "ambience that fits the scene"
+
 # <Subject N> is not a character slot. The guide lists "people, animals, or objects;
 # scenes, backgrounds, or environments; clothing, props, interfaces, or visual effects;
 # styles, actions, expressions, or poses". The noun is only used when a slot has no
@@ -145,6 +163,14 @@ def fmt_seconds(value):
 
 
 CHAR_TAG_RE = re.compile(r"@(?:character|char|ref)(\d+)")
+# base-en 4.2: a later shot opens "At 00:03.500, the camera cuts to ..."; these are the guide's words for a cut or transition.
+CUT_PHRASE_RE = re.compile(r"(?:the (?:camera|shot) (?:cuts|transitions|changes|switches)|(?:a )?(?:cross-dissolve|dissolve|fade|wipe))\b",
+                           re.IGNORECASE)
+NO_CUT_RE = re.compile(r"\b(?:without\s+(?:any\s+)?cut(?:s|ting)?|no\s+(?:camera\s+)?cuts?"
+                       r"|(?:single|continuous|unbroken)\s+(?:shot|take))\b", re.IGNORECASE)
+# A shot text that opens with its framing ("A close-up of", "Wide shot showing") continues the cut words directly.
+FRAMING_RE = re.compile(r"(?:(a|an|the)\s+)?((?:(?!(?:a|an|the)\s)[\w-]+\s+){0,3}?(?:close-up|closeup)\b"
+                        r"|(?:(?!(?:a|an|the)\s)[\w-]+\s+){1,3}?(?:shot|view|angle)\b)", re.IGNORECASE)
 
 
 def substitute_char_tags(text, replacements, later=None, seen=None):
@@ -299,7 +325,13 @@ def retention_note(label, marker, kind=None, audio=False):
     }[marker] % label
 
 
-def picture_texts(ordinal, picture_role, ref_role, shot_no, at):
+def _shot_list(numbers):
+    """[Shot 1] / [Shot 1] and [Shot 2] / [Shot 1], [Shot 2] and [Shot 3]."""
+    names = ["[Shot %d]" % n for n in numbers]
+    return names[0] if len(names) == 1 else ", ".join(names[:-1]) + " and " + names[-1]
+
+
+def picture_texts(ordinal, picture_role, ref_role, shot_no, at, panels=None):
     """Every wording a standalone <Picture N> needs, derived once from the job it does.
 
     Four renderings, because the guide asks for the same fact in four places: the
@@ -311,13 +343,25 @@ def picture_texts(ordinal, picture_role, ref_role, shot_no, at):
     voices when the wording lived in three places, which is how issue #4 happened.
     """
     label = "<Picture %d>" % ordinal
-    shot = "[Shot %d]" % shot_no if shot_no else ""
+    numbers = []
+    if isinstance(shot_no, (list, tuple)):
+        # one storyboard for several shots, as the guide's own example: "for [Shot 1] and [Shot 2]"
+        numbers = list(shot_no)
+        shot = _shot_list(numbers) if numbers else ""
+        shot_no = None
+    else:
+        shot = "[Shot %d]" % shot_no if shot_no else ""
 
     if ref_role == REF_ROLE_STORYBOARD:
         target = shot or "the target video"
+        mapping = ""
+        if panels and shot and all(panels):
+            # a render part that covers only some of the storyboard's panels says which ones
+            pairs = ["[Shot %d] is its panel %d" % (n, p) for n, p in zip(numbers, panels)]
+            mapping = " " + (pairs[0] if len(pairs) == 1 else ", ".join(pairs[:-1]) + " and " + pairs[-1]) + "."
         return {
-            "declaration": "%s is a storyboard reference for %s, defining its viewpoint, "
-                           "subject placement, and shot order." % (label, target),
+            "declaration": "%s is a storyboard reference for %s, defining %s viewpoint, "
+                           "subject placement, and shot order.%s" % (label, target, "their" if " and " in target else "its", mapping),
             "where": "storyboard reference for %s" % target,
             "phrase": "The shot follows the storyboard reference %s." % label if shot else "",
             "note": "%s is a storyboard reference for %s" % (label, target),
@@ -360,6 +404,9 @@ def _subject_sentence(label, description, kind, pictures):
     constraint.
     """
     text = (description or "").strip().rstrip(".")
+    # A description written as its own sentence ("An elfin woman ...", as an analysis returns it) continues this one.
+    if text.split(" ", 1)[0] in ("A", "An", "The"):
+        text = text[0].lower() + text[1:]
     if text:
         return "%s is %s, shown in %s." % (label, text, pictures)
     return "%s is %s shown in %s." % (label, SUBJECT_KINDS[kind], pictures)
@@ -515,7 +562,7 @@ def build_subject_definitions(subject_slots, ref_image_slots, ref_video_segs,
         if s.get("source") != "timeline" or s.get("ref_role") == REF_ROLE_SUBJECT:
             continue
         texts = picture_texts(ordinal, s.get("picture_role"), s.get("ref_role"),
-                              s.get("shot_no"), s.get("at"))
+                              s.get("shot_no"), s.get("at"), s.get("panel_nos"))
         pic_texts[ordinal] = texts
         lines.append(texts["declaration"])
         labels.append({"label": "<Picture %d>" % ordinal, "marker": s["retention"],
@@ -529,8 +576,15 @@ def build_subject_definitions(subject_slots, ref_image_slots, ref_video_segs,
     # That is the only way to reach the guide's own shapes, which name things this node
     # cannot infer: "<Audio 1> is the voice-timbre reference for <Subject 1> (S1)", or
     # "<Video 1> is the source video for the target video edit".
+    paired_count = 0
     for i, seg in enumerate(ref_video_segs):
         label = "<Video %d>" % (i + 1)
+        if seg.get("paired_audio"):
+            paired_count += 1
+            audio_label = "<Audio %d>" % paired_count
+            lines.append("%s is the soundtrack of %s: follow its sound and timing." % (audio_label, label))
+            labels.append({"label": audio_label, "kind": "audio", "audio": True, "marker": "reference", "note": "",
+                           "where": "soundtrack of %s" % label})
         lines.append(_declaration(
             label, seg.get("refDesc"),
             "%s is a reference video: follow its motion and camera work." % label))
@@ -539,7 +593,7 @@ def build_subject_definitions(subject_slots, ref_image_slots, ref_video_segs,
                        "note": (seg.get("refNote") or "").strip(),
                        "where": "motion and camera work"})
     for i, seg in enumerate(ref_audio_segs):
-        label = "<Audio %d>" % (i + 1)
+        label = "<Audio %d>" % (paired_count + i + 1)
         marker = sanitize_retention(seg.get("retention"), audio=True)
         copied = marker in ("fully_copy", "partially_copy")
         # A clip can name the subject whose voice it carries, which is the one thing a
@@ -624,6 +678,8 @@ def task_type_prefix(ref_image_slots, ref_video_segs, ref_audio_segs, override=N
             types.add(TASK_REFERENCE)
     if ref_video_segs:
         types.add(TASK_REFERENCE)
+        if any(seg.get("paired_audio") for seg in ref_video_segs):
+            types.add(TASK_AUDIO_REFERENCE)
     for seg in ref_audio_segs:
         types.add(TASK_AUDIO_REUSE
                   if sanitize_retention(seg.get("retention"), audio=True)
@@ -671,7 +727,7 @@ def alignment_instruction(has_first, has_last, shot_count, seconds):
 
 def compile_storyboard_minimax(global_prompt, shots, soundscape="", music="",
                                subject_lines=None, retention_lines=None,
-                               instruction="", summary=""):
+                               instruction="", summary="", opening_in_shot=False):
     """The notation MiniMax documents in VIDEO_PROMPT_WRITING_GUIDE_*.md.
 
     `integrated_multimodal_description: [Shot 1] … [Shot 2] At 00:05.000, …`, with the
@@ -705,8 +761,16 @@ def compile_storyboard_minimax(global_prompt, shots, soundscape="", music="",
     written = [s for s in shots if shot_has_text(s)]
     body = []
     gp = (global_prompt or "").strip()
-    if gp:
+    # ref-en 5.2: full-reference mode establishes the style "in one or two English sentences before [Shot 1]"; base-en
+    # 4.1: "At the beginning of [Shot 1], state the overall style and initial composition" - inside the shot.
+    # The Legacy Director keeps its layout (the global prompt ahead of [Shot 1]); NG asks for the guide's.
+    opening = ""
+    if gp and (subject_lines or not opening_in_shot):
         body.append(gp)
+    elif gp:
+        opening = gp if gp.endswith((".", "!", "?")) else gp + "."
+        if not written:
+            body.append("[Shot 1] %s" % opening)
     for index, shot in enumerate(written):
         pieces = list(shot.get("pieces") or [])
         # guide 5.3: a frame anchor is named in the shot itself, in natural phrasing, as
@@ -727,24 +791,42 @@ def compile_storyboard_minimax(global_prompt, shots, soundscape="", music="",
                 pieces.insert(last_prose + 1, ("prose", phrases))
         text = join_shot_pieces([piece for _, piece in pieces])
         if index == 0:
-            body.append("[Shot 1] %s" % text)
+            body.append("[Shot 1] %s" % " ".join(part for part in (opening, text) if part))
         else:
+            if opening_in_shot and text and not CUT_PHRASE_RE.match(text) and not NO_CUT_RE.search(gp + " " + text):
+                # NG shot text is what is seen ("A close-up of ..."); the cut words are the compiler's, so the user's
+                # text reads "At 00:03.000, the camera cuts to a close-up of ..." as in the guide.
+                framing = FRAMING_RE.match(text)
+                if framing:
+                    article = (framing.group(1) or ("an" if framing.group(2)[0] in "AEIOUaeiou" else "a")).lower()
+                    text = "the camera cuts to %s %s%s" % (article, framing.group(2)[0].lower() + framing.group(2)[1:],
+                                                           text[framing.end():])
+                else:
+                    text = "the camera cuts to a new shot. " + text
             body.append("[Shot %d] At %s, %s"
                         % (index + 1, fmt_timestamp(shot["start_sec"]), text))
     if body:
         parts.append(("detailed_description: " if subject_lines
                       else "integrated_multimodal_description: ") + " ".join(body))
 
-    if (soundscape or "").strip():
-        parts.append("overall_soundscape: " + soundscape.strip())
+    # base-en.txt §4.6 lists 1–4 sentences as the field's content and reserves "N/A" for a video
+    # the user asked to be silent. Leaving the field out is not one of the guide's options, so
+    # within a real prompt it is written either way: the user's own words when they gave some,
+    # and otherwise the placeholder — which states a shape ("ambience that fits the scene") rather
+    # than inventing specific sounds. A user who wants silence writes N/A, and that reaches the
+    # prompt untouched.
+    #
+    # The `parts` guard is the same one non_diegetic_music has: a timeline with nothing in it at
+    # all has no description, and bolting the sound fields onto an empty prompt would manufacture
+    # one out of defaults. That case is reported as "detailed_description is empty" instead.
+    written = (soundscape or "").strip()
+    if written or parts:
+        parts.append("overall_soundscape: " + (written or SOUNDSCAPE_PLACEHOLDER))
     if (music or "").strip():
         parts.append("non_diegetic_music: " + music.strip())
     elif parts:
-        # Both guides list non_diegetic_music as a required field, and both write "N/A"
-        # in it — the base guide says to do so "when there is no non-diegetic music",
-        # which is exactly what an empty box means. overall_soundscape deliberately does
-        # not get the same treatment: there "N/A" is reserved for a video the user asked
-        # to be silent, so filling it in would state something nobody said.
+        # §4.7: "Use `N/A` when there is no non-diegetic music", which is exactly what an empty
+        # box means. Unlike the soundscape, this field has a correct value for the empty case.
         #
         # `parts` guards against writing a prompt that is nothing but this line.
         parts.append("non_diegetic_music: N/A")
@@ -1179,6 +1261,8 @@ def plan_timeline(tdata, win_start, duration_frames, fps, global_prompt="",
     raw_slots = tdata.get("subjects")
     if not isinstance(raw_slots, list):
         raw_slots = tdata.get("characters", []) or []
+    # Named below like the clips: a tenth figure or picture used to vanish in silence.
+    dropped_pictures = [info.get("shortName") or info.get("fileName") or "a subject" for info in raw_slots[MAX_SUBJECT_SLOTS:]]
     for info in raw_slots[:MAX_SUBJECT_SLOTS]:
         images_list = info.get("images", []) or []
         legacy_b64 = info.get("imageB64", "")
@@ -1250,11 +1334,10 @@ def plan_timeline(tdata, win_start, duration_frames, fps, global_prompt="",
 
     if ref_mode_on:
         for slot_idx, slot in enumerate(subject_slots):
-            if not slot["images"] or len(ref_image_slots) >= MAX_REF_IMAGES:
-                continue
             for img in slot["images"]:
                 if len(ref_image_slots) >= MAX_REF_IMAGES:
-                    break
+                    dropped_pictures.append(img.get("fileName") or slot.get("short_name") or img.get("name") or "a picture")
+                    continue
                 ref_image_slots.append({"source": "char", "slot": slot_idx, "image": img})
 
         # Images arriving through the `ref_images` input used to be numbered and never
@@ -1327,6 +1410,10 @@ def plan_timeline(tdata, win_start, duration_frames, fps, global_prompt="",
             seg = ev["seg"]
             ref_role = sanitize_ref_role(seg.get("refRole"))
             shot_no = written_shot_no.get(ev.get("shot_index"))
+            if ref_role == REF_ROLE_STORYBOARD and seg.get("shotNos") is not None:
+                shot_no = list(seg["shotNos"])      # the shots it plans; [] = the whole target video
+            elif seg.get("shotNo") is not None:
+                shot_no = seg["shotNo"]             # a Director edge frame: the shot it opens or ends
             if ev["is_end"]:
                 picture_role = ROLE_LAST
             elif shot_no:
@@ -1342,6 +1429,7 @@ def plan_timeline(tdata, win_start, duration_frames, fps, global_prompt="",
                     "desc": (seg.get("refDesc") or "").strip(),
                     "note": (seg.get("refNote") or "").strip(),
                     "shot_no": shot_no,
+                    "panel_nos": seg.get("panelNos"),
                     "at": fmt_seconds(ev["rel_start_f"] / fps)}
             if ref_role == REF_ROLE_AUTO and picture_role in (ROLE_FIRST, ROLE_LAST):
                 slot["keyframe"] = picture_role
@@ -1508,6 +1596,8 @@ def plan_timeline(tdata, win_start, duration_frames, fps, global_prompt="",
     for kind, cap, seg in over_cap:
         ref_warnings.append("H3 takes at most %d reference %s clips; '%s' was dropped."
                             % (cap, kind, seg_name(seg)))
+    for name in (dropped_pictures if ref_mode_on else ()):
+        ref_warnings.append("H3 takes at most %d reference pictures; '%s' was dropped." % (MAX_REF_IMAGES, name))
 
     # Parked audio gets no warning: being a reference and not a soundtrack is the whole point
     # of parking it, and a line that fires on every timeline of a kind is how a warnings area
@@ -1662,7 +1752,8 @@ def plan_timeline(tdata, win_start, duration_frames, fps, global_prompt="",
         # correlation 0.17), and with nothing but these two lines added it was the clip
         # (0.98). The guide says as much: "state its copy or reference relationship ... in the
         # section that matches the audible layer". Written text still wins.
-        copied = [("<Audio %d>" % (i + 1),
+        paired_count = sum(bool(seg.get("paired_audio")) for seg in ref_video_segs)
+        copied = [("<Audio %d>" % (paired_count + i + 1),
                    sanitize_retention(seg.get("retention"), audio=True))
                   for i, seg in enumerate(ref_audio_segs)
                   if sanitize_retention(seg.get("retention"), audio=True)
@@ -1737,7 +1828,7 @@ def plan_timeline(tdata, win_start, duration_frames, fps, global_prompt="",
                 written_shots, actual_seconds)
         prompt = compile_storyboard_minimax(global_prompt, shots, soundscape, music,
                                             subject_lines, retention_lines, instruction,
-                                            summary_line)
+                                            summary_line, bool(tdata.get("opening_in_shot")))
 
         # Measured on detailed_description alone — the label blocks and the sound sections
         # are not what the guide is counting.
@@ -1759,14 +1850,18 @@ def plan_timeline(tdata, win_start, duration_frames, fps, global_prompt="",
                 "generation tasks."
                 % (description_words, DESCRIPTION_MIN_WORDS, DESCRIPTION_MAX_WORDS))
 
-        # Both guides list the three core fields as required, and this is the one that
-        # cannot be filled in for the user: "N/A" here means the video was asked to be
-        # silent, which is a claim only the user can make. H3 generates the audio, so
-        # leaving it out hands the whole soundtrack to the model's guess.
+        # Both guides list the three core fields as required, and §4.6 gives the soundscape no
+        # value of its own for an empty box — "N/A" there claims the video was asked to be
+        # silent, a claim only the user can make. So the field is written with a stated
+        # placeholder, and this warning is what tells the user that is what happened. It keeps
+        # the words "overall_soundscape is empty", which is still exactly true: the input was.
+        # H3 generates the audio, so an unnoticed placeholder hands the whole soundtrack to the
+        # model's guess.
         if not (soundscape or "").strip():
             ref_warnings.append(
-                "overall_soundscape is empty; the guide lists it as a required field. "
-                "Describe the ambience, or write N/A if the video is meant to be silent.")
+                "overall_soundscape is empty, so %r was written as a placeholder; the guide lists "
+                "the field as required. Describe the ambience, or write N/A if the video is meant "
+                "to be silent." % SOUNDSCAPE_PLACEHOLDER)
 
         # The same rule for the field that carries the whole video. Unlike the soundscape
         # there is no N/A for it: a prompt with no detailed_description has described nothing,

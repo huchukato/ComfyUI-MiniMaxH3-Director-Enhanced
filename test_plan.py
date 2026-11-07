@@ -1069,9 +1069,21 @@ both = compile(audio, soundscape="Explicit wins.")
 check_in("an explicit parameter beats the lifted line",
          "overall_soundscape: Explicit wins.", both["prompt"])
 
+# base-en.txt §4.6 gives this field 1–4 sentences of content and reserves "N/A" for a video the
+# user asked to be silent, so an empty box is neither of those: it takes the stated placeholder
+# and the warning says it was a placeholder. Leaving the field out would leave the prompt with
+# two of its three core fields, and H3 generates the audio, so what is not written is guessed.
 plain = compile(tl([img(0, 144)], ref_mode="ON"))
-check_not_in("no empty soundscape section when there is nothing to say",
-             "overall_soundscape:", plain["prompt"])
+check_in("an empty soundscape gets the stated placeholder",
+         "overall_soundscape: %s" % plan.SOUNDSCAPE_PLACEHOLDER, plain["prompt"])
+check_not_in("and never a bare N/A, which claims the video was asked to be silent",
+             "overall_soundscape: N/A", plain["prompt"])
+check_in("the placeholder is reported rather than passed off as the user's own words",
+         "overall_soundscape is empty", " ".join(plain["ref_warnings"]))
+# The sound fields do not manufacture a prompt on their own, though: a timeline with nothing in
+# it has no description to hang them off.
+check_not_in("an entirely empty timeline is still left empty", "overall_soundscape:",
+             plan.plan_timeline({"prompt_format": "minimax"}, 0, 288, FPS)["prompt"])
 
 # the editor's two boxes live in the timeline, so both consumers read one value
 from_tl = compile(tl([img(0, 144)], ref_mode="ON",

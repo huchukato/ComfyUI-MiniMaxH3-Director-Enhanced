@@ -43,6 +43,7 @@ from comfy_api.latest import io
 
 from . import minimax_media as media
 from . import minimax_plan as plan
+from . import minimax_refprep as refprep
 from .minimax_core import core
 
 log = logging.getLogger(__name__)
@@ -319,10 +320,11 @@ class MiniMaxH3Director(io.ComfyNode):
     def define_schema(cls):
         return io.Schema(
             node_id="MiniMaxH3DirectorCS",
-            display_name="MiniMax H3 Director",
-            category="MiniMax H3",
+            display_name="MiniMax H3 Director (Legacy)",
+            category="MiniMax H3/Legacy",
             description=(
-                "Visual timeline for MiniMax H3. Segments become a storyboard prompt with "
+                "LEGACY - the timeline Director of 0.x, kept and maintained for existing workflows. For videos of any length use the "
+                "NG nodes (docs/NG.md). Visual timeline for MiniMax H3. Segments become a storyboard prompt with "
                 "[0s-1.5s] shot markers, timeline images become first/last keyframes (fl2va) "
                 "or <Picture i> references (ref2va), the reference-video track becomes "
                 "<Video k>, and audio clips become <Audio j> plus a muxable audio output. "
@@ -691,8 +693,10 @@ class MiniMaxH3Director(io.ComfyNode):
                     "the audio track / Override Audio, and remove any voice clip from the "
                     "subject slots)."
                 )
+            ref_videos, ref_video_audios = refprep.grid_references(
+                ref_videos, ref_video_audios, refprep.chunk_frames(length))
             out = mm.MiniMaxH3ReferenceToVideo.execute(
-                clip=clip, vae=vae, audio_vae=audio_vae, prompt=prompt,
+                clip=refprep.h3_clip(clip), vae=vae, audio_vae=audio_vae, prompt=prompt,
                 width=width, height=height, length=length,
                 ref_image_size=ref_image_size,
                 ref_images={"ref_image_%d" % i: t for i, t in enumerate(ref_image_tensors)} or None,
@@ -708,7 +712,7 @@ class MiniMaxH3Director(io.ComfyNode):
                             "they were ignored — switch the toolbar to 'Refs ON (ref2va)' to "
                             "use them as <Picture i> references.", len(middles))
             out = mm.MiniMaxH3ImageToVideo.execute(
-                clip=clip, vae=vae, prompt=prompt,
+                clip=refprep.h3_clip(clip), vae=vae, prompt=prompt,
                 width=width, height=height, length=length,
                 first_frame=first_frame, last_frame=last_frame,
             )
@@ -764,4 +768,4 @@ class MiniMaxH3Director(io.ComfyNode):
 
 
 NODE_CLASS_MAPPINGS = {"MiniMaxH3DirectorCS": MiniMaxH3Director}
-NODE_DISPLAY_NAME_MAPPINGS = {"MiniMaxH3DirectorCS": "MiniMax H3 Director"}
+NODE_DISPLAY_NAME_MAPPINGS = {"MiniMaxH3DirectorCS": "MiniMax H3 Director (Legacy)"}

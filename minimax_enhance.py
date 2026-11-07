@@ -296,9 +296,20 @@ def clean_prompt(text, preset, max_words=0):
     lines = [ln.rstrip() for ln in text.strip().splitlines()]
     # split_audio_music() reads line by line and stops at a blank line, so the Audio: and
     # Music: lines have to sit together at the end with nothing blank between them
-    body, audio, music = [], None, None
-    for ln in lines:
+    body, audio, music, taken = [], None, None, set()
+    labels = ("audio:", "sound:", "sfx:", "music:", "score:")
+    for index, ln in enumerate(lines):
+        if index in taken:
+            continue
         low = ln.strip().lower()
+        if low.startswith(labels) and not ln.partition(":")[2].strip():
+            # A label alone on its line carries the next paragraph: Qwen3-VL 4B wrote "Audio:" and the sound below it,
+            # which became an empty "Audio:" line at the end and the sound as loose prose.
+            following = next((i for i in range(index + 1, len(lines)) if lines[i].strip()), None)
+            if following is not None and not lines[following].strip().lower().startswith(labels):
+                taken.add(following)
+                ln = ln.rstrip() + " " + lines[following].strip()
+                low = ln.strip().lower()
         if low.startswith(("audio:", "sound:", "sfx:")) and audio is None:
             head, _, rest = ln.strip().partition(":")
             audio = "%s: %s" % (head.strip(), _first_sentences(_unwrap(rest), 4))
@@ -361,7 +372,7 @@ class MiniMaxH3EnhancePrompt(io.ComfyNode):
         return io.Schema(
             node_id="MiniMaxH3EnhancePromptCS",
             display_name="MiniMax H3 Enhance Prompt",
-            category="MiniMax H3",
+            category="MiniMax H3/Legacy",
             description=(
                 "Turns a one-line idea plus reference images into a MiniMax-H3 prompt, "
                 "using a local vision model (Ollama / LM Studio / OpenAI-compatible). "
