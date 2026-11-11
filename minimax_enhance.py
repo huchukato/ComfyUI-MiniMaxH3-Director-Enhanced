@@ -408,14 +408,17 @@ class MiniMaxH3EnhancePrompt(io.ComfyNode):
                                optional=True,
                                tooltip="Told to the model so its timestamps fit. Match the "
                                        "Director's duration."),
-                io.Combo.Input("provider", options=["ollama", "lmstudio", "custom"],
-                               default="ollama", optional=True,
-                               tooltip="Where the vision model runs."),
+                io.Combo.Input("provider", options=["qwenvl", "ollama", "lmstudio", "custom"],
+                               default="qwenvl", optional=True,
+                               tooltip="Where the vision model runs. qwenvl = the QwenVL-Mod "
+                                       "GGUF enhancer in this same process — no server, the "
+                                       "model field is the GGUF file name (empty = auto)."),
                 io.String.Input("base_url", default="", optional=True,
                                 tooltip="Empty = the provider's default (Ollama "
                                         "http://127.0.0.1:11434, LM Studio "
                                         "http://127.0.0.1:1234). http:// is added if you "
-                                        "leave it off. Host and port; a trailing /v1 is fine."),
+                                        "leave it off. Host and port; a trailing /v1 is fine. "
+                                        "Unused by qwenvl."),
                 io.String.Input("model", default="", optional=True,
                                 tooltip="Model name. Must be a VISION model — a text-only model "
                                         "will ignore your images without saying so. Empty falls "
@@ -475,7 +478,7 @@ class MiniMaxH3EnhancePrompt(io.ComfyNode):
 
     @classmethod
     async def execute(cls, images=None, idea="", preset=PRESET_GLOBAL, system_prompt="",
-                      duration_seconds=5.0, provider="ollama", base_url="", model="",
+                      duration_seconds=5.0, provider="qwenvl", base_url="", model="",
                       seed=0, max_image_size=768, max_words=500, unload_after=True,
                       on_error="passthrough", api_key_env="") -> io.NodeOutput:
         tensors = _collect(images)
@@ -496,8 +499,8 @@ class MiniMaxH3EnhancePrompt(io.ComfyNode):
                             "scaling them to the first one.", sorted(sizes))
             batched = extra("nodes_post_processing", "batch_images").batch_images(flat)
 
-        provider = (provider or "ollama").lower()
-        defaults = media._PROVIDER_DEFAULTS.get(provider, media._PROVIDER_DEFAULTS["ollama"])
+        provider = (provider or "qwenvl").lower()
+        defaults = media._PROVIDER_DEFAULTS.get(provider, media._PROVIDER_DEFAULTS["qwenvl"])
         url = media.normalize_base_url(base_url, defaults["url"])
         model_name = model or defaults["model"]
         # the widget names an environment variable; the key is read here and never stored

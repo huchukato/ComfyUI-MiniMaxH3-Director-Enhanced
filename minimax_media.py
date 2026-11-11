@@ -664,13 +664,16 @@ def _scan_llm_gguf_files():
     return sorted(found)
 
 
-def _qwenvl_generate(images_b64, prompt, system_prompt, model_name, max_tokens):
+def _qwenvl_generate(images_b64, prompt, system_prompt, model_name, max_tokens, sampling=None):
     """One Analyze round-trip through the QwenVL-Mod GGUF enhancer, in-process.
 
     Same machinery the QwenVL_Unified node runs: llama-cpp-python on the GGUF
     (+ its mmproj) found through the node's own model paths. keep_model_loaded
     is False, so the weights leave VRAM right after answering — the same
     contract the HTTP providers get from keep_alive=0.
+
+    `sampling` carries the panel's knobs (provider_payload output, flat names);
+    whatever is absent falls back to the values the Director has always used.
     """
     import random
     import sys
@@ -700,19 +703,24 @@ def _qwenvl_generate(images_b64, prompt, system_prompt, model_name, max_tokens):
         tensors.append(torch.from_numpy(np.array(img).astype(np.float32) / 255.0)[None, ])
 
     inst = mod.AILab_QwenVL_GGUF_Advanced()
+    s = sampling or {}
     out = inst.process(
         model_name=model_name.strip(),
         preset_prompt=system_prompt or "",
         prompt=prompt or "",
         max_tokens=int(max_tokens or 1024),
         keep_model_loaded=False,
-        seed=random.randint(0, 2 ** 31 - 1),
+        seed=int(s["seed"]) if s.get("seed") is not None else random.randint(0, 2 ** 31 - 1),
         keep_last_prompt=False,
         # the Advanced node's remaining required knobs — the same values the
         # QwenVL_Unified wrapper passes for its GGUF branch
-        device="auto", camera_tag="None", temperature=0.25, top_p=0.9,
-        repetition_penalty=1.0, frame_count=16, ctx=32768, n_batch=512,
-        gpu_layers=-1, image_max_tokens=4096, top_k=20, pool_size=4194304,
+        device="auto", camera_tag="None",
+        temperature=float(s.get("temperature", 0.25)),
+        top_p=float(s.get("top_p", 0.9)),
+        repetition_penalty=float(s.get("repeat_penalty", 1.0)),
+        frame_count=16, ctx=32768, n_batch=512,
+        gpu_layers=-1, image_max_tokens=4096,
+        top_k=int(s.get("top_k", 20)), pool_size=4194304,
         image=tensors[0] if tensors else None,
         image2=tensors[1] if len(tensors) > 1 else None,
         image3=tensors[2] if len(tensors) > 2 else None,
@@ -747,7 +755,7 @@ async def vlm_generate(images_b64, prompt, provider, base_url, model,
     if provider == "qwenvl":
         # In-process: the QwenVL-Mod enhancer runs in this same ComfyUI process.
         return await asyncio.to_thread(
-            _qwenvl_generate, images_b64, prompt, system_prompt, model, max_tokens)
+            _qwenvl_generate, images_b64, prompt, system_prompt, model, max_tokens, sampling)
 
     if provider in ("lmstudio", "custom") and not model:
         raise VLMError("No model name set for %s. Enter the name of the model you have "

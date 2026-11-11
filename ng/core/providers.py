@@ -141,6 +141,13 @@ PROVIDERS = {
         fields=("max_tokens", "seed", "fixed_seed", "timeout_seconds", "temperature", "top_p",
                 "frequency_penalty", "presence_penalty"),
         verified_note="Not tested yet. Start llama.cpp's server first."),
+    "qwenvl": Provider(
+        "qwenvl", "QwenVL (in-process)", "local", "", supports=("text", "vision"),
+        fields=("max_tokens", "seed", "fixed_seed", "timeout_seconds", "temperature", "top_p", "top_k"),
+        verified=True,
+        verified_note="Tested: the Director's own enhancer runs this transport; the GGUF (+ mmproj) "
+                      "loads in-process, no server needed. The model field is the GGUF file name.",
+        sample_model="Qwen3.5-9B-The-Defiant-Fable-Uncnr-Heretic-NEO-MAX-Q6_K.gguf"),
     "custom": Provider(
         "custom", "Custom URL", "local", "", supports=("text",),
         fields=("max_tokens", "seed", "fixed_seed", "timeout_seconds", "temperature", "top_p",
@@ -185,7 +192,7 @@ PROVIDERS = {
 # together under CLIP / Encoder instead of splitting the same path across two cards.
 SOURCES = (
     {"id": "local", "title": "Local", "hint": "Load LLM / AI Model", "icon": "monitor",
-     "providers": ("ollama", "lmstudio", "llamacpp", "custom"), "key": False,
+     "providers": ("qwenvl", "ollama", "lmstudio", "llamacpp", "custom"), "key": False,
      "note": "Runs on your own machine. Disk models load only during an explicit AI action."},
     {"id": "api", "title": "API", "hint": "Online provider", "icon": "globe",
      "providers": ("openai", "anthropic", "gemini", "openrouter", "custom"), "key": True,

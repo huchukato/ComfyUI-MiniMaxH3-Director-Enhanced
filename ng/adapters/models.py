@@ -66,6 +66,10 @@ async def listing(provider, base_url, api_key=None, timeout=15):
     """The model names this address currently serves. Never raises: an unreachable provider is an
     empty list plus a reason, because a panel with no list must still let the user type a name."""
     entry = providers.get(provider)
+    if entry.id == "qwenvl":
+        # In-process: the models are the GGUF files in the LLM paths — no server to ask.
+        names = await asyncio.to_thread(legacy._scan_llm_gguf_files)
+        return names, ("" if names else "No GGUF models found in the LLM model paths.")
     # An empty base_url means "the address this provider is known at", not "no address". The panel
     # shows the address as a placeholder and only writes it into the widget when it is edited, so
     # sending the widget value alone would refuse the providers that work out of the box.
