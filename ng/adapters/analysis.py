@@ -136,8 +136,9 @@ async def analyze(payload, *, api_key=None):
         except ValueError as error:
             if "not readable JSON" not in str(error):
                 raise
-            answer = await _answer("\n\nYour previous reply was not readable JSON. "
-                                   "Return only the JSON object, with no other text.")
+            answer = await _answer("\n\nYour previous reply was:\n%s\n\n"
+                                   "It was not readable JSON. Rewrite it as the JSON object "
+                                   "the schema asked for, with no other text." % (answer or "")[:800])
             return parse_suggestion(answer, payload.get("media", "text")).to_dict()
     except (ValueError, legacy.VLMError) as error:
         raise ValueError(str(error).replace(key, "[redacted]") if key else str(error)) from None
