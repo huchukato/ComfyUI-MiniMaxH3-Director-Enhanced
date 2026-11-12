@@ -683,6 +683,7 @@ def _qwenvl_generate(images_b64, prompt, system_prompt, model_name, max_tokens, 
     `sampling` carries the panel's knobs (provider_payload output, flat names);
     whatever is absent falls back to the values the Director has always used.
     """
+    import inspect
     import random
     import sys
 
@@ -721,6 +722,9 @@ def _qwenvl_generate(images_b64, prompt, system_prompt, model_name, max_tokens, 
         user_prompt = prompt or ""
         if getattr(inst, "is_qwen35", False):
             user_prompt = "/no_think\n" + user_prompt
+        kwargs = {}
+        if "response_format" in inspect.signature(inst._invoke).parameters:
+            kwargs["response_format"] = {"type": "json_object"} if want_json else None
         text = inst._invoke(
             system_prompt=system_prompt or "",
             user_prompt=user_prompt,
@@ -731,7 +735,7 @@ def _qwenvl_generate(images_b64, prompt, system_prompt, model_name, max_tokens, 
             repetition_penalty=float(s.get("repeat_penalty", 1.0)),
             seed=int(s["seed"]) if s.get("seed") is not None else random.randint(0, 2 ** 31 - 1),
             model_name=model_name.strip(),
-            response_format={"type": "json_object"} if want_json else None,
+            **kwargs,
         )
     finally:
         inst.clear()
