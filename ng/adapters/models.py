@@ -67,9 +67,29 @@ async def listing(provider, base_url, api_key=None, timeout=15):
     empty list plus a reason, because a panel with no list must still let the user type a name."""
     entry = providers.get(provider)
     if entry.id == "qwenvl":
-        # In-process: the models are the GGUF files in the LLM paths — no server to ask.
-        names = await asyncio.to_thread(legacy._scan_llm_gguf_files)
-        return names, ("" if names else "No GGUF models found in the LLM model paths.")
+        # In-process: offer the same list the QwenVL Unified node's own dropdown shows — the
+        # gguf_models.json catalog plus a disk scan on the GGUF side, HF_VL_MODELS on the
+        # Transformers side, both prefixed like the node's picker. A catalog name that is not
+        # on disk downloads on first use, which is exactly how the node's picker behaves.
+        def _catalog_names():
+            names = []
+            mod = legacy._qwenvl_module()
+            loader = getattr(mod, "_load_gguf_vl_catalog", None) if mod is not None else None
+            if loader is not None:
+                try:
+                    catalog = loader().get("models") or {}
+                    names = [legacy.QWENVL_GGUF_PREFIX + n for n in sorted(catalog)
+                             if (catalog.get(n) or {}).get("mmproj_filename")]
+                except Exception:
+                    names = []
+            if not names:
+                names = [legacy.QWENVL_GGUF_PREFIX + n for n in legacy._scan_llm_gguf_files()]
+            hf = legacy._qwenvl_hf_module()
+            hf_models = getattr(hf, "HF_VL_MODELS", {}) if hf is not None else {}
+            names += [legacy.QWENVL_HF_PREFIX + n for n in sorted(hf_models)]
+            return names
+        names = await asyncio.to_thread(_catalog_names)
+        return names, ("" if names else "No QwenVL models found (GGUF catalog and HF list are empty).")
     # An empty base_url means "the address this provider is known at", not "no address". The panel
     # shows the address as a placeholder and only writes it into the widget when it is edited, so
     # sending the widget value alone would refuse the providers that work out of the box.

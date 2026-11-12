@@ -1,4 +1,5 @@
 """Declared provider capabilities and editable analysis suggestions, independent of transport."""
+import re
 from dataclasses import dataclass
 from urllib.parse import urlsplit
 
@@ -174,7 +175,7 @@ def analysis_prompt(media, content, offer=None):
     kinds = [kind for kind in offer.get("content") or () if kind in CONTENT_BY_MEDIA[media]] or list(CONTENT_BY_MEDIA[media])
     # A card that shows no content choice (the Text card sends []) is not asked for one: Qwen3-VL 4B put the usage
     # "constraint" there, and the whole answer was refused.
-    content_part = "" if offer.get("content") == [] else "content (exactly one of: %s), " % ", ".join(kinds)
+    content_part = "" if offer.get("content") == [] else "content (one of: %s), " % ", ".join(kinds)
     roles = [role for role in offer.get("usage") or () if role in USAGE_BY_MEDIA[media]] or list(USAGE_BY_MEDIA[media])
     # A Text card's stored content ("rules" by default) is not something its user chose; as a focus it made a 4B model
     # call a character description a rule. Each role is named with what it means, so a small model can choose.
@@ -184,15 +185,16 @@ def analysis_prompt(media, content, offer=None):
     told = {"image": "one or two sentences naming what keeps it recognizable: for a figure the face, hair, eyes, build, "
                      "clothing with colours, accessories and props; otherwise the place or the thing",
             "video": "one or two sentences: the movement, where it starts and where it ends"}.get(media, "one concise sentence")
-    return ("Describe %s as a reference for a video director. Focus on %s. Return only JSON with "
-            "description (%s), %susage (exactly one of: %s) "
-            "and why (one short sentence naming the visible reason for that choice). Answer with one object for the whole %s, "
-            "not one per picture. Use the words of the lists exactly. Do not invent facts. Shape: %s"
-            % (scope[media], focus, told, content_part, "; ".join("%s = %s" % (role, USAGE_MEANING[media][role]) for role in roles),
-               {"image": "picture", "video": "clip", "audio": "sound", "text": "text"}[media],
-               # Qwen3-VL 4B left usage out, or wrote the role as a key ({"constraint": "..."}); a shape to copy helps it.
-               '{"description": "<the description>", %s"usage": "<one word from the usage list>", "why": "<one sentence>"}'
-               % ("" if not content_part else '"content": "<one word from the content list>", ')))
+    return ("Describe %s as a reference for a video director. Focus on %s. The card needs "
+            "description (%s) above all — that one field is required. %susage (one of: %s) and "
+            "why (one short sentence naming the visible reason) are suggestions the user can also "
+            "pick by hand: add them only when the right choice is obvious, else leave them out. "
+            "Return only one JSON object for the whole %s, not one per picture, "
+            "e.g. {\"description\": \"<the description>\"}. Use the list words exactly. "
+            "Do not invent facts."
+            % (scope[media], focus, told, content_part,
+               "; ".join("%s = %s" % (role, USAGE_MEANING[media][role]) for role in roles),
+               {"image": "picture", "video": "clip", "audio": "sound", "text": "text"}[media]))
 
 
 def parse_suggestion(text, media="text"):
@@ -213,6 +215,10 @@ def parse_suggestion(text, media="text"):
         if str(error).startswith("The AI's answer stopped before its JSON was complete."):
             # Preserve the analysis error category and reserve the token hint for a real cutoff.
             raise ValueError("The provider's answer was not readable JSON. " + str(error)) from None
+        if ("not readable JSON" in str(error) and not re.search(r"[\{\[]", text)
+                and len(text.split()) >= 4):
+            # The card really needs description above all; a plain sentence is a usable suggestion.
+            return AnalysisSuggestion(description=text.strip()[:2000])
         raise
     if "description" not in data:
         # Qwen3-VL 4B answered a video per still ({"stills": [{...}, {...}, {...}]}) instead of one object for the clip.
@@ -244,4 +250,4 @@ def parse_suggestion(text, media="text"):
     if len(why) > 600:
         raise ValueError("The reason is longer than 600 characters; ask again or write it yourself.")
     why = " ".join(part for part in (why, left_out) if part)
-    return AnalysisSuggestion(description=description, content=content, usage=usage, why=why)
+    return AnalysisSuggestion(description=description, content=content or "", usage=usage, why=why)

@@ -328,13 +328,18 @@ export function buildPanel(node, root, header, widget) {
     }
     const select = providerField.field;
     if (select.tagName !== "SELECT") return;
-    select.replaceChildren();
-    for (const value of providers) {
-      const option = element("option", "", value);
-      option.value = value;
-      select.append(option);
+    // Rebuild only on a real change: resetting the children while the select has focus drops its
+    // selection, and the active-element guard in control().sync then leaves the first option shown.
+    if (Array.from(select.options).map((option) => option.value).join("|") !== providers.join("|")) {
+      select.replaceChildren();
+      for (const value of providers) {
+        const option = element("option", "", value);
+        option.value = value;
+        select.append(option);
+      }
     }
     providerField.sync();
+    select.value = providerWidget.value;
   }
 
   function sync() {

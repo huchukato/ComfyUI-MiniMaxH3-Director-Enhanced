@@ -644,6 +644,19 @@ def _qwenvl_module():
     return None
 
 
+def _qwenvl_hf_module():
+    """The QwenVL-Mod Transformers (HF) module, as ComfyUI imported it — or None."""
+    import sys
+    for name, mod in list(sys.modules.items()):
+        if name.split(".")[-1] == "AILab_QwenVL" and hasattr(mod, "AILab_QwenVL_Advanced"):
+            return mod
+    return None
+
+
+QWENVL_GGUF_PREFIX = "GGUF: "
+QWENVL_HF_PREFIX = "HF: "
+
+
 def _scan_llm_gguf_files():
     """The standalone GGUF models visible in the LLM model paths — the exact
     names the qwenvl Analyze discovery accepts (mmproj/mtp sidecars excluded)."""
@@ -687,11 +700,13 @@ def _qwenvl_generate(images_b64, prompt, system_prompt, model_name, max_tokens, 
     import random
     import sys
 
-    mod = _qwenvl_module()
-    if mod is None:
-        raise VLMError("QwenVL-Mod is not loaded in this ComfyUI instance — "
-                       "the qwenvl Analyze backend needs it installed.")
     model_name = (model_name or "").strip()
+    backend = "gguf"
+    if model_name.startswith(QWENVL_HF_PREFIX):
+        model_name = model_name[len(QWENVL_HF_PREFIX):].strip()
+        backend = "hf"
+    elif model_name.startswith(QWENVL_GGUF_PREFIX):
+        model_name = model_name[len(QWENVL_GGUF_PREFIX):].strip()
     if not model_name:
         # Zero-config: one GGUF in the LLM model paths is unambiguous — use it.
         found = _scan_llm_gguf_files()
@@ -705,6 +720,16 @@ def _qwenvl_generate(images_b64, prompt, system_prompt, model_name, max_tokens, 
         else:
             raise VLMError("No GGUF model found in the LLM model paths — enter the "
                            "file name in the Director's Analyze settings.")
+
+    s = sampling or {}
+    if backend == "hf":
+        return _qwenvl_hf_generate(images_b64, prompt, system_prompt, model_name,
+                                   max_tokens, s)
+
+    mod = _qwenvl_module()
+    if mod is None:
+        raise VLMError("QwenVL-Mod is not loaded in this ComfyUI instance — "
+                       "the qwenvl Analyze backend needs it installed.")
 
     inst = mod.AILab_QwenVL_GGUF_Advanced()
     s = sampling or {}
@@ -740,6 +765,44 @@ def _qwenvl_generate(images_b64, prompt, system_prompt, model_name, max_tokens, 
     finally:
         inst.clear()
     normalize = getattr(mod, "normalize_minimax_output", None)
+    if normalize is not None:
+        text = normalize(text, system_prompt or "", has_image=bool(images_b64))
+    log.info("[MiniMaxDirector] qwenvl raw answer (%d chars): %s",
+             len(text or ""), (text or "")[:600].replace("\n", "\\n"))
+    return (text or "").strip()
+
+
+def _qwenvl_hf_generate(images_b64, prompt, system_prompt, model_name, max_tokens, s):
+    """The same Analyze round-trip on the QwenVL-Mod Transformers (HF) backend.
+
+    The node has no chat-style invoke, so the system prompt is folded into the
+    user text; generate() accepts PIL images and takes up to three stills.
+    """
+    hf = _qwenvl_hf_module()
+    if hf is None:
+        raise VLMError("QwenVL-Mod's HF backend is not loaded in this ComfyUI instance.")
+    pil = [Image.open(_io.BytesIO(base64.b64decode(b))).convert("RGB")
+           for b in (images_b64 or [])][:3]
+    pil += [None] * (3 - len(pil))
+    inst = hf.AILab_QwenVL_Advanced()
+    inst.load_model(model_name, hf.Quantization.FP16.value, "auto", False, "auto", False)
+    try:
+        text = inst.generate(
+            prompt_text=((system_prompt or "") + "\n\n" + (prompt or "")).strip(),
+            image=pil[0],
+            image2=pil[1],
+            image3=pil[2],
+            frame_count=16,
+            max_tokens=int(max_tokens or 1024),
+            temperature=float(s.get("temperature", 0.25)),
+            top_p=float(s.get("top_p", 0.9)),
+            num_beams=1,
+            repetition_penalty=float(s.get("repeat_penalty", 1.0)),
+            model_name=model_name,
+        )
+    finally:
+        inst.clear()
+    normalize = getattr(hf, "normalize_minimax_output", None)
     if normalize is not None:
         text = normalize(text, system_prompt or "", has_image=bool(images_b64))
     log.info("[MiniMaxDirector] qwenvl raw answer (%d chars): %s",
