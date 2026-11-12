@@ -1,4 +1,12 @@
+## 1.1.2
+
+**Sampling defaults for the turbo-integrated checkpoints** — the Director's settings panel now
+opens on 8 steps / euler / beta (shift 12/3 unchanged): the recipe PRISM and 10Eros beta7 want,
+instead of the 20-step res_multistep/simple the native checkpoints used. Saved workflows keep
+their own values.
+
 ## 1.1.1
+
 
 **QwenVL everywhere in the AI paths** — the NG AI Loader gains a "QwenVL (in-process)" provider:
 the QwenVL-Mod GGUF enhancer runs in the same ComfyUI process (no Ollama/server), with vision via
