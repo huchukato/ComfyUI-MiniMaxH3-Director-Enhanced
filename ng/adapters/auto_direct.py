@@ -22,7 +22,8 @@ async def direct(payload, *, api_key=None):
         # The provider registry owns address, model and auth; _PROVIDER_DEFAULTS knows only the local three.
         entry, url, model = endpoint(config)
         answer = await legacy.vlm_generate([], prompt, config.provider, url, model, api_key=key, auth=entry.auth,
-                                          **{**wire(config), "max_tokens": direct_tokens(config.max_tokens)})
+                                          **{**wire(config), "max_tokens": direct_tokens(config.max_tokens),
+                                             "want_json": True})
         return parse_direction(answer, seconds, contexts, current, read_str(payload, "keep", "request", ""), sung)
     except (ValueError, legacy.VLMError) as error:
         raise ValueError(str(error).replace(key, "[redacted]") if key else str(error)) from None

@@ -671,7 +671,8 @@ def _image_b64_to_png(b):
     return base64.b64encode(buf.getvalue()).decode("utf-8")
 
 
-def _qwenvl_generate(images_b64, prompt, system_prompt, model_name, max_tokens, sampling=None):
+def _qwenvl_generate(images_b64, prompt, system_prompt, model_name, max_tokens, sampling=None,
+                     want_json=False):
     """One Analyze round-trip through the QwenVL-Mod GGUF enhancer, in-process.
 
     Same machinery the QwenVL_Unified node runs: llama-cpp-python on the GGUF
@@ -730,6 +731,7 @@ def _qwenvl_generate(images_b64, prompt, system_prompt, model_name, max_tokens, 
             repetition_penalty=float(s.get("repeat_penalty", 1.0)),
             seed=int(s["seed"]) if s.get("seed") is not None else random.randint(0, 2 ** 31 - 1),
             model_name=model_name.strip(),
+            response_format={"type": "json_object"} if want_json else None,
         )
     finally:
         inst.clear()
@@ -743,7 +745,7 @@ def _qwenvl_generate(images_b64, prompt, system_prompt, model_name, max_tokens, 
 
 async def vlm_generate(images_b64, prompt, provider, base_url, model,
                        system_prompt=None, timeout=120, keep_alive=0, max_tokens=None,
-                       api_key=None, auth="bearer", sampling=None):
+                       api_key=None, auth="bearer", sampling=None, want_json=False):
     """One vision-model round-trip, shared by the Analyze endpoint and the Enhance node.
 
     Kept provider-shaped rather than generic on purpose: Ollama takes raw base64 in an
@@ -768,7 +770,7 @@ async def vlm_generate(images_b64, prompt, provider, base_url, model,
     if provider == "qwenvl":
         # In-process: the QwenVL-Mod enhancer runs in this same ComfyUI process.
         return await asyncio.to_thread(
-            _qwenvl_generate, images_b64, prompt, system_prompt, model, max_tokens, sampling)
+            _qwenvl_generate, images_b64, prompt, system_prompt, model, max_tokens, sampling, want_json)
 
     if provider in ("lmstudio", "custom") and not model:
         raise VLMError("No model name set for %s. Enter the name of the model you have "

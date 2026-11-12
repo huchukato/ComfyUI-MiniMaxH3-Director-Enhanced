@@ -127,7 +127,7 @@ async def analyze(payload, *, api_key=None):
             # after the role. Sending the role but not the framing is how an answer arrives as
             # prose that parse_suggestion cannot read.
             system_prompt=framed(for_node("context", media)),
-            **wire(config))
+            **{**wire(config), "want_json": True})
 
     try:
         answer = await _answer()

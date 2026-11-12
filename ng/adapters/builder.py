@@ -47,7 +47,8 @@ async def plan(payload, *, api_key=None):
         entry, url, model = endpoint(config)
         answer = await legacy.vlm_generate(shown, prompt, config.provider, url, model, api_key=key,
                                            auth=entry.auth, system_prompt=SYSTEM,
-                                           **{**wire(config), "max_tokens": plan_tokens(config.max_tokens)})
+                                           **{**wire(config), "max_tokens": plan_tokens(config.max_tokens),
+                                              "want_json": True})
         result = parse_plan(answer, seconds, contexts, quick, sung)
     except (ValueError, legacy.VLMError) as error:
         raise ValueError(str(error).replace(key, "[redacted]") if key else str(error)) from None

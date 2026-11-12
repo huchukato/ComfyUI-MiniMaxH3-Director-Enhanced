@@ -29,7 +29,8 @@ async def texts(payload, *, api_key=None):
     try:
         entry, url, model = endpoint(config)
         answer = await legacy.vlm_generate(shown, prompt, config.provider, url, model, api_key=key, auth=entry.auth,
-                                           system_prompt=SYSTEM, **{**wire(config), "max_tokens": texts_tokens(config.max_tokens)})
+                                           system_prompt=SYSTEM, **{**wire(config), "max_tokens": texts_tokens(config.max_tokens),
+                                                                   "want_json": True})
         return parse_texts(answer, board, contexts)
     except (ValueError, legacy.VLMError) as error:
         raise ValueError(str(error).replace(key, "[redacted]") if key else str(error)) from None
