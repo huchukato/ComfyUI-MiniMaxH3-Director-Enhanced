@@ -1,3 +1,27 @@
+## 1.2.5
+
+**Analyze asks only for a description** — the Context card's content, usage and
+keep-in-video are user controls, so the analysis prompt no longer demands all
+four JSON fields: description is the required output, the rest is optional, and
+a plain-sentence answer fills the suggestion too. Small models that answered a
+single word ("character") get the repair retry on a much easier contract.
+
+**Provider dropdown keeps the picked provider** — the panel rebuilt the select's
+options on every sync and snapped to the first entry while it had focus, so a
+choice looked ignored since qwenvl became the first listed. Options are rebuilt
+only on a real change and the widget value is restored afterwards.
+
+**qwenvl lists the full QwenVL model catalog** — "Load models" now answers with
+the same names the QwenVL Unified node shows: the gguf_models.json catalog plus
+disk scan as "GGUF: ..." and HF_VL_MODELS as "HF: ...", each downloading on first
+use. HF models run on the Transformers backend through a raw generate call.
+
+**Turbo flag off in the example workflows** — the nine NG workflows were saved
+with Turbo on and both LoRAs "none", a state that only warned "Turbo needs a
+turbo LoRA" and restored a bogus 20 steps on toggle-off. They ship turbo off
+(the checkpoints integrate their turbo), and a load-time repair normalizes the
+same state in workflows saved earlier.
+
 ## 1.2.0
 
 **Garage style presets in the AI paths** — a "Style preset" select joins the Studio's

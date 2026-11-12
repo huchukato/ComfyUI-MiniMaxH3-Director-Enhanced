@@ -59,6 +59,11 @@ export function repairLaterWidgets(node) {
     const valid = widget.name === "turbo" ? typeof widget.value === "boolean" : missingFile || (widget.options?.values || []).includes(widget.value);
     if (!valid) widget.value = LATER[widget.name];
   }
+  // Turbo on with both LoRAs "none" applies nothing - older example workflows were saved that way, and the state only
+  // showed a "needs a LoRA" warning plus a bogus 20-step restore on toggle-off. Normalize it to what it does: off.
+  const named = Object.fromEntries((node.widgets || []).map((w) => [w.name, w]));
+  if (named.turbo?.value === true && named.turbo_lora_fl2va?.value === "none" && named.turbo_lora_ref2va?.value === "none")
+    named.turbo.value = false;
 }
 
 // A renamed Context keeps its @Name mentions in the Prompt and in every shot; the audio lanes travel along untouched.

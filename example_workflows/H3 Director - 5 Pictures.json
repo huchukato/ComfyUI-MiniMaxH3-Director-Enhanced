@@ -301,7 +301,7 @@
         "beta",
         12,
         3,
-        true,
+        false,
         "none",
         "none",
         "crop",
