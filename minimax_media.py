@@ -736,6 +736,8 @@ def _qwenvl_generate(images_b64, prompt, system_prompt, model_name, max_tokens, 
     normalize = getattr(mod, "normalize_minimax_output", None)
     if normalize is not None:
         text = normalize(text, system_prompt or "", has_image=bool(images_b64))
+    log.info("[MiniMaxDirector] qwenvl raw answer (%d chars): %s",
+             len(text or ""), (text or "")[:600].replace("\n", "\\n"))
     return (text or "").strip()
 
 

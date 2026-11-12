@@ -1,7 +1,7 @@
 [project]
 name = "minimaxh3-director-enhanced"
 description = "Videos of any length with MiniMax H3: shots on a timeline, characters, voices, songs, storyboard and control videos, rendered part by part in ComfyUI's native loop. Nine example workflows and a guide; the Legacy timeline Director is included. Enhanced fork: per-segment and whole-prompt QwenVL enhancement."
-version = "1.2.1"
+version = "1.2.2"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
 dependencies = ["opencv-python>=4.8"]
