@@ -1,4 +1,15 @@
+## 1.1.1
+
+**QwenVL everywhere in the AI paths** — the NG AI Loader gains a "QwenVL (in-process)" provider:
+the QwenVL-Mod GGUF enhancer runs in the same ComfyUI process (no Ollama/server), with vision via
+mmproj, the panel's sampling knobs honored, and the model list served from the local GGUF scan.
+Every NG AI action (Auto Direct, Analyze, Build, Storyboard, Write) and the Enhance node can use
+it; the Enhance node now defaults to it. Also since 1.0.1: reference images attach to the Enhance
+node (subject anchored to the actual character) and the enhancer model is a catalog dropdown with
+auto-download.
+
 ## 0.3.9
+
 
 **Registry release metadata** — the changelog now ships with the registry version page (publish
 action extracts the CHANGELOG section per version). No functional changes in this release.
