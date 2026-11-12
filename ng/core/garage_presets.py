@@ -39,9 +39,13 @@ def _module():
 
 
 def names():
-    """The vl preset names (MiniMax, LTX, ...), or [] when QwenVL-Mod is absent."""
+    """The MiniMax vl preset names, or [] when QwenVL-Mod is absent. Other groups
+    (LTX, Wan, Pony, QWEN, IMG) write prompts for other models, so they stay out
+    of this pack's pickers."""
     mod = _module()
-    return list(getattr(mod, "VL_PRESET_NAMES", [])) if mod else []
+    if not mod:
+        return []
+    return [name for name in getattr(mod, "VL_PRESET_NAMES", []) if name.startswith("MiniMax")]
 
 
 def text(name, duration=None):
