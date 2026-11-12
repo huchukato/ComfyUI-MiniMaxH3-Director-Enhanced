@@ -23,9 +23,9 @@ def model_inputs():
 
 def sampling_inputs():
     return [io.Int.Input("seed", default=0, min=0, max=0xffffffffffffffff, control_after_generate=True),
-            io.Int.Input("steps", default=20, min=1, max=100, advanced=True),
-            io.Combo.Input("sampler_name", options=KSampler.SAMPLERS, default="res_multistep", advanced=True),
-            io.Combo.Input("scheduler", options=KSampler.SCHEDULERS, default="simple", advanced=True),
+            io.Int.Input("steps", default=8, min=1, max=100, advanced=True),
+            io.Combo.Input("sampler_name", options=KSampler.SAMPLERS, default="euler", advanced=True),
+            io.Combo.Input("scheduler", options=KSampler.SCHEDULERS, default="beta", advanced=True),
             io.Float.Input("shift_video", default=12.0, min=0.01, max=100.0, advanced=True),
             io.Float.Input("shift_audio", default=3.0, min=0.01, max=100.0, advanced=True)]
 

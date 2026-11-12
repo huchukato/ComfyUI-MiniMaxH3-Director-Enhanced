@@ -30,9 +30,9 @@ class DirectorInputs:
 @dataclass(frozen=True)
 class RenderSettings:
     seed: int = 0
-    steps: int = 20
-    sampler_name: str = "res_multistep"
-    scheduler: str = "simple"
+    steps: int = 8
+    sampler_name: str = "euler"
+    scheduler: str = "beta"
     shift_video: float = 12.0
     shift_audio: float = 3.0
     turbo: bool = False
