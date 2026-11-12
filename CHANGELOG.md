@@ -1,3 +1,17 @@
+## 1.2.0
+
+**Garage style presets in the AI paths** — a "Style preset" select joins the Studio's
+Make H3 prompt row (Direction / Speech / Language): the picked Garage preset (QwenVL-Mod
+catalog, synced from ComfyUI-Garage) is appended to every "Write with AI" part request,
+for both HTTP providers and the in-process QwenVL clip path. The Enhance node's preset
+dropdown now lists the same catalog and uses the preset text as its system prompt,
+resolved against the duration widget. No preset selected = unchanged behaviour.
+
+**NG defaults aligned with the Garage stack** — the H3 AI Loader provider defaults to
+QwenVL (in-process) instead of Ollama; the nine NG example workflows ship pointing at
+the provisioned checkpoints (10Eros beta7 on the fl2va slot, PRISM on ref2va, the
+heretic Qwen3-VL encoder), turbo LoRAs off and euler/beta sampling.
+
 ## 1.1.2
 
 **Sampling defaults for the turbo-integrated checkpoints** — the Director's settings panel now

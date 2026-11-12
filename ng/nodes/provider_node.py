@@ -15,7 +15,7 @@ class NGAIProvider(io.ComfyNode):
         return io.Schema(node_id="NGAIProvider", display_name="H3 AI Loader", category=CATEGORY,
                          description="Connect a generative CLIP loader, local model server or compatible API. The AI only runs when you press an AI button (Analyze, Make H3 prompt, AI: split into shots, Write with AI).",
                          inputs=[io.String.Input("source", default="local", tooltip="Which kind of provider the fields below belong to. The panel on the node shows the matching address and options."),
-                                 io.Combo.Input("provider", options=sorted(providers.PROVIDERS), default="ollama",
+                                 io.Combo.Input("provider", options=sorted(providers.PROVIDERS), default="qwenvl",
                                                 tooltip="Which server or API to talk to. Each one has its own address and its own set of settings."),
                                  io.String.Input("base_url", default="", tooltip="Address of the selected provider. The panel offers its standard address."),
                                  io.String.Input("model", default="", tooltip="Model served by your selected provider."),

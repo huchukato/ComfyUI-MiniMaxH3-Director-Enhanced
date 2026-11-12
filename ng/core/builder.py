@@ -20,7 +20,7 @@ PLAN_TOKENS = 3072
 # Content of a picture that is a place or a thing rather than a figure: bound to the shots that show it, so a render part
 # without that place does not get it as a reference. A figure stays in every part (a shot that only says "she" still needs it).
 PLACES = ("environment", "location", "prop", "object", "style", "lighting", "composition")
-DEFAULT_QUICK = {"direction": "auto", "speech": "none", "language": "English"}
+DEFAULT_QUICK = {"direction": "auto", "speech": "none", "language": "English", "preset": ""}
 
 
 def plan_tokens(max_tokens):
@@ -38,6 +38,8 @@ def read_quick(payload):
         quick["speech"] = raw["speech"]
     if raw.get("language") in LANGUAGES:
         quick["language"] = raw["language"]
+    if isinstance(raw.get("preset"), str):
+        quick["preset"] = raw["preset"]
     return quick
 
 

@@ -21,6 +21,7 @@ from comfy_api.latest import io
 
 from . import minimax_media as media
 from .minimax_core import extra
+from .ng.core import garage_presets
 
 log = logging.getLogger(__name__)
 
@@ -159,6 +160,24 @@ marks, verbatim and untranslated.
 %s""" % (_CAMERA, _AUDIO, _FORBIDDEN)
 
 _SYSTEM = {PRESET_GLOBAL: SYSTEM_GLOBAL, PRESET_STORYBOARD: SYSTEM_STORYBOARD}
+
+_DURATION_KEYS = ("5s", "10s", "15s", "20s")
+
+
+def _duration_key(seconds):
+    try:
+        value = float(seconds)
+    except (TypeError, ValueError):
+        return None
+    return min(_DURATION_KEYS, key=lambda k: abs(int(k[:-1]) - value))
+
+
+def preset_options():
+    """Built-ins plus the Garage catalog's vl presets (empty when QwenVL-Mod is absent)."""
+    try:
+        return [PRESET_GLOBAL, PRESET_STORYBOARD] + garage_presets.names()
+    except Exception:
+        return [PRESET_GLOBAL, PRESET_STORYBOARD]
 
 # The guide's own figure, used when the budget is switched off.
 _GUIDE_WORDS = "350 to 500"
@@ -393,13 +412,14 @@ class MiniMaxH3EnhancePrompt(io.ComfyNode):
                 io.String.Input("idea", multiline=True, default="",
                                 tooltip="What you want, in plain words. The vision model turns "
                                         "this plus the images into a MiniMax-shaped prompt."),
-                io.Combo.Input("preset", options=[PRESET_GLOBAL, PRESET_STORYBOARD],
+                io.Combo.Input("preset", options=preset_options(),
                                default=PRESET_GLOBAL,
                                tooltip="'global' writes scene, style, subjects and lighting and "
                                        "leaves the shots to your timeline. 'storyboard' writes "
                                        "the whole shot sequence with timestamps — use it only "
                                        "when your timeline segments carry no prompt text, or "
-                                       "the two shot numberings will collide."),
+                                       "the two shot numberings will collide. Garage presets "
+                                       "(QwenVL-Mod catalog) write the prompt in that style."),
                 io.String.Input("system_prompt", multiline=True, default="", optional=True,
                                 tooltip="Overrides the built-in instructions. Leave empty to use "
                                         "the preset's own, which is derived from MiniMax's "
@@ -505,7 +525,10 @@ class MiniMaxH3EnhancePrompt(io.ComfyNode):
         model_name = model or defaults["model"]
         # the widget names an environment variable; the key is read here and never stored
         api_key = media.resolve_api_key({"api_key_env": api_key_env})
-        system = (system_prompt or "").strip() or system_for(preset, max_words)
+        system = (system_prompt or "").strip()
+        if not system:
+            garage = garage_presets.text(preset, _duration_key(duration_seconds)) if preset not in _SYSTEM else ""
+            system = garage or system_for(preset, max_words)
 
         user = (idea or "").strip() or "Describe what these images show as a video."
         if preset == PRESET_STORYBOARD:

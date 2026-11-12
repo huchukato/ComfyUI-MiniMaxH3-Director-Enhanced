@@ -13,7 +13,8 @@ export function readQuick(node) {
   const saved = node.properties?.ng_quick || {};
   return { direction: DIRECTIONS.some(([key]) => key === saved.direction) ? saved.direction : "auto",
     speech: SPEECH.some(([key]) => key === saved.speech) ? saved.speech : "none",
-    language: LANGUAGES.some(([key]) => key === saved.language) ? saved.language : "English" };
+    language: LANGUAGES.some(([key]) => key === saved.language) ? saved.language : "English",
+    preset: typeof saved.preset === "string" ? saved.preset : "" };
 }
 
 // A new direction brings its own speech (Song sings, the others are silent until the user says otherwise).
@@ -41,5 +42,7 @@ export function quickView(S, actions) {
     select(DIRECTIONS.map(([key, label]) => [key, label]), quick.direction, (value) => actions.setQuick("direction", value), { "aria-label": "Direction", ...small }),
     select(SPEECH, quick.speech, (value) => actions.setQuick("speech", value), { "aria-label": "Speech", ...small }),
     quick.speech === "none" ? null : select(LANGUAGES, quick.language, (value) => actions.setQuick("language", value), { "aria-label": "Language of the words", ...small }),
+    (S.presetNames || []).length ? select([["", "Style: default"], ...S.presetNames.map((name) => [name, name])],
+      quick.preset || "", (value) => actions.setQuick("preset", value), { "aria-label": "Garage style preset", ...small }) : null,
     tip(about), why ? h("span", { class: "h3s-warn", style: { fontSize: "12px" } }, why) : null];
 }

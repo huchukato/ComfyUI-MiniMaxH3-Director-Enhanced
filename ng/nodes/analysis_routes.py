@@ -15,6 +15,7 @@ from ..adapters.part_writer import write
 from ..adapters.storyboard_ai import texts
 from ..core.analysis import ProviderConfig
 from ..core.fields import need_dict
+from ..core.garage_presets import names as garage_preset_names
 from .context_routes import key_root
 
 
@@ -70,6 +71,12 @@ async def direct_scenes(request):
         return _answer({"suggestion": await direct(payload, api_key=_api_key(request, payload))})
     except (ValueError, KeyError, TypeError, OSError, aiohttp.ClientError, asyncio.TimeoutError) as error:
         return _failure(error)
+
+
+@PromptServer.instance.routes.get("/ng/garage_presets")
+async def garage_presets(request):
+    """The Garage style-preset names the Studio's preset select offers (QwenVL-Mod catalog)."""
+    return web.json_response({"ok": True, "names": await asyncio.to_thread(garage_preset_names)})
 
 
 @PromptServer.instance.routes.post("/ng/write_part")

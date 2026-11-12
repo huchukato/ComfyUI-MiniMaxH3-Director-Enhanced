@@ -138,6 +138,10 @@ function placeField(S, actions, shot) {
 const EFFECT_HINT = "An official MiniMax H3 effect such as Bullet time. It takes over the camera of this shot, in the render part where the shot starts.";
 export const loadEffects = (api) => api.fetchApi("/embeddings").then((response) => response.json())
   .then((names) => names.filter((name) => /^minimaxh3_/i.test(name)).sort()).catch(() => []);
+
+// Garage style presets for the "Write with AI" steps (QwenVL-Mod catalog, synced from ComfyUI-Garage).
+export const loadGaragePresets = (api) => api.fetchApi("/ng/garage_presets").then((response) => response.json())
+  .then((data) => (data.ok ? data.names || [] : [])).catch(() => []);
 const effectLabel = (name) => name.replace(/^minimaxh3_/i, "").replace(/_/g, " ").replace(/^./, (c) => c.toUpperCase());
 
 function effectField(S, actions, shot) {

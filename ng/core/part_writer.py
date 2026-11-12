@@ -19,12 +19,19 @@ def _without_own(director):
 
 
 def guidance(quick):
-    """What the chosen Make H3 prompt direction wants a description to dwell on; "" without one."""
-    if not quick or quick.get("direction", "auto") == "auto":
-        return ""
-    text = direction(quick["direction"]).write
-    if quick["direction"] == "spicy":
-        text += " Everyone is an adult, 18 or older: call them women and men, never girls or boys."
+    """What the chosen Make H3 prompt direction wants a description to dwell on, plus the Garage style
+    preset's text when one is picked; "" without either."""
+    text = ""
+    if quick and quick.get("direction", "auto") != "auto":
+        text = direction(quick["direction"]).write
+        if quick["direction"] == "spicy":
+            text += " Everyone is an adult, 18 or older: call them women and men, never girls or boys."
+    preset = (quick or {}).get("preset") or ""
+    if preset:
+        from .garage_presets import text as preset_text
+        body = preset_text(preset)
+        if body:
+            text = (text + "\n\n" if text else "") + "Style preset %s:\n%s" % (preset, body)
     return text
 
 
