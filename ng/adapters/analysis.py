@@ -112,22 +112,33 @@ async def analyze(payload, *, api_key=None):
         raise ValueError(refused)
     prompt = analysis_prompt(media, widgets.get("content", ""), payload.get("offer"))
     key = legacy.resolve_api_key({"api_key_env": config.api_key_env}) if api_key is None else api_key
-    try:
+
+    async def _answer(extra=""):
+        p = prompt + extra
         if media == "audio":
-            answer = await audio_generate(config, prompt, widgets.get("audio", ""), key)
-        else:
-            image_list = await asyncio.to_thread(images, media, widgets.get(media, "")) if media in ("image", "video") else []
-            if media == "text":
-                prompt += "\n\nContext text:\n" + widget_text(widgets, "text")
-            entry, url, model = endpoint(config)
-            answer = await legacy.vlm_generate(
-                image_list, prompt, config.provider, url, model, api_key=key, auth=entry.auth,
-                # The role and the schema framing come from one place, and the framing is appended
-                # after the role. Sending the role but not the framing is how an answer arrives as
-                # prose that parse_suggestion cannot read.
-                system_prompt=framed(for_node("context", media)),
-                **wire(config))
-        return parse_suggestion(answer, payload.get("media", "text")).to_dict()
+            return await audio_generate(config, p, widgets.get("audio", ""), key)
+        image_list = await asyncio.to_thread(images, media, widgets.get(media, "")) if media in ("image", "video") else []
+        if media == "text":
+            p += "\n\nContext text:\n" + widget_text(widgets, "text")
+        entry, url, model = endpoint(config)
+        return await legacy.vlm_generate(
+            image_list, p, config.provider, url, model, api_key=key, auth=entry.auth,
+            # The role and the schema framing come from one place, and the framing is appended
+            # after the role. Sending the role but not the framing is how an answer arrives as
+            # prose that parse_suggestion cannot read.
+            system_prompt=framed(for_node("context", media)),
+            **wire(config))
+
+    try:
+        answer = await _answer()
+        try:
+            return parse_suggestion(answer, payload.get("media", "text")).to_dict()
+        except ValueError as error:
+            if "not readable JSON" not in str(error):
+                raise
+            answer = await _answer("\n\nYour previous reply was not readable JSON. "
+                                   "Return only the JSON object, with no other text.")
+            return parse_suggestion(answer, payload.get("media", "text")).to_dict()
     except (ValueError, legacy.VLMError) as error:
         raise ValueError(str(error).replace(key, "[redacted]") if key else str(error)) from None
 

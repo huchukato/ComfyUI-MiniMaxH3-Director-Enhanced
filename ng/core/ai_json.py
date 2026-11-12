@@ -22,16 +22,21 @@ def read_object(text, path, invalid_message):
     fence = re.search(r"(?m)^[ \t]*```[^\n]*\n", text)
     if fence:
         text = text[fence.end():].strip()
-    start = re.search(r"[\{\[]", text)
-    candidate = text[start.start():] if start else text
-    try:
-        data, end = json.JSONDecoder().raw_decode(candidate)
-    except json.JSONDecodeError as error:
-        if candidate.startswith("{") and (error.msg.startswith("Unterminated string")
-                                          or error.pos >= len(candidate.rstrip())):
-            raise ValueError("The AI's answer stopped before its JSON was complete. Raise Max tokens on the AI Loader "
-                             "and try again.") from None
-        raise ValueError(invalid_message) from None
-    if _extra_object(candidate[end:]):
-        raise ValueError(invalid_message)
-    return fields.need_dict(data, path)
+    decoder = json.JSONDecoder()
+    cutoff = False
+    for start in re.finditer(r"[\{\[]", text):
+        candidate = text[start.start():]
+        try:
+            data, end = decoder.raw_decode(candidate)
+        except json.JSONDecodeError as error:
+            if candidate.startswith("{") and (error.msg.startswith("Unterminated string")
+                                              or error.pos >= len(candidate.rstrip())):
+                cutoff = True
+            continue
+        if _extra_object(candidate[end:]):
+            raise ValueError(invalid_message)
+        return fields.need_dict(data, path)
+    if cutoff:
+        raise ValueError("The AI's answer stopped before its JSON was complete. Raise Max tokens on the AI Loader "
+                         "and try again.")
+    raise ValueError(invalid_message)
