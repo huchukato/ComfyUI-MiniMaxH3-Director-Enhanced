@@ -4,7 +4,7 @@ import json
 from comfy_execution.graph_utils import GraphBuilder
 
 from ... import minimax_media as media
-from ..core.analysis import analysis_prompt, parse_suggestion
+from ..core.analysis import analysis_prompt, analysis_tokens, parse_suggestion
 from ..core.auto_direct import direct_tokens, direction_prompt, parse_direction, timing_hints
 from ..core.builder import SYSTEM as BUILD_SYSTEM, parse_plan, pictures, plan_prompt, plan_tokens, read_quick
 from ..core.fields import need_dict, read_number, read_str
@@ -96,7 +96,8 @@ def native_request(provider, action, request_json):
     max_length = (direct_tokens(provider.config.max_tokens) if action == "direct"
                   else write_tokens(provider.config.max_tokens) if action == "write"
                   else plan_tokens(provider.config.max_tokens) if action == "build"
-                  else texts_tokens(provider.config.max_tokens) if action == "storyboard" else provider.config.max_tokens)
+                  else texts_tokens(provider.config.max_tokens) if action == "storyboard"
+                  else analysis_tokens(provider.config.max_tokens))
     inputs = dict(clip=clip, prompt=prompt, max_length=max_length,
                   sampling_mode="off", thinking=False, use_default_template=True,
                   # The role comes from system_prompts.py and the schema framing from there too, so

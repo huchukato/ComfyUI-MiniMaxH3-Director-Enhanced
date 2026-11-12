@@ -10,6 +10,14 @@ from .context import CONTENT_BY_MEDIA, CONTENT_KINDS, USAGE_BY_MEDIA
 # The fields an analysis may fill. Everything else on a card stays the user's own text.
 ANALYSIS_FIELDS = ("description", "content", "usage")
 
+# Reasoning models (many OpenRouter ones) spend ~2000 tokens thinking before the JSON; the loader's
+# 512 default cut them off mid-answer, which surfaced as "not readable JSON" on every provider.
+ANALYSIS_TOKENS = 2048
+
+
+def analysis_tokens(max_tokens):
+    return max(max_tokens, ANALYSIS_TOKENS)
+
 # Sampling bounds. A value outside them is a typo or a slider dragged too far, and passing it on
 # would only come back as a provider error that says nothing about which field was wrong.
 SAMPLING_RANGES = {"temperature": (0.0, 2.0), "top_p": (0.0, 1.0), "top_k": (0, 100), "min_p": (0.0, 1.0),

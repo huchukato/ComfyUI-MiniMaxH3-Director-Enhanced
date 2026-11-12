@@ -6,7 +6,7 @@ from PIL import Image
 
 from ... import minimax_media as legacy
 from ..core import providers
-from ..core.analysis import ProviderConfig, analysis_prompt, parse_suggestion
+from ..core.analysis import ProviderConfig, analysis_prompt, analysis_tokens, parse_suggestion
 from ..core.fields import need_dict
 from ..core.context_build import widget_text
 from ..core.system_prompts import framed, for_node
@@ -127,7 +127,7 @@ async def analyze(payload, *, api_key=None):
             # after the role. Sending the role but not the framing is how an answer arrives as
             # prose that parse_suggestion cannot read.
             system_prompt=framed(for_node("context", media)),
-            **{**wire(config), "want_json": True})
+            **{**wire(config), "max_tokens": analysis_tokens(config.max_tokens), "want_json": True})
 
     try:
         answer = await _answer()
