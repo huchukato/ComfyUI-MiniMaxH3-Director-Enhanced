@@ -604,7 +604,7 @@
         ]
       },
       "widgets_values": [
-        "10Eros_Max_h3_8stepTURBO_beta7_fix1-native_int8_protected_edges_HQ.safetensors",
+        "Minimax-H3-Hybrid-DMAD-PDMD_int8.safetensors",
         "default"
       ],
       "widgets_values_named": {
